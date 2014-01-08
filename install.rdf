@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+    <Description about="urn:mozilla:install-manifest">
+        <em:id>imageforward@sblask</em:id>
+        <em:name>Image Forward</em:name>
+        <em:version>0.1.0</em:version>
+        <em:type>2</em:type>
+        <em:creator>Sebastian Blask</em:creator>
+
+        <em:homepageURL>https://github.com/sblask/firefox-image-forward</em:homepageURL>
+        <em:description></em:description>
+
+        <em:iconURL>chrome://imageforward/skin/forward.png</em:iconURL>
+
+        <em:targetApplication>
+            <Description>
+                <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
+                <em:minVersion>26.0</em:minVersion>
+                <em:maxVersion>26.*</em:maxVersion>
+            </Description>
+        </em:targetApplication>
+    </Description>
+</RDF>
+
