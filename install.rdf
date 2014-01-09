@@ -10,7 +10,7 @@
         <em:homepageURL>https://github.com/sblask/firefox-image-forward</em:homepageURL>
         <em:description></em:description>
 
-        <em:iconURL>chrome://imageforward/skin/forward.png</em:iconURL>
+        <em:iconURL>chrome://imageforward/skin/image-forward.png</em:iconURL>
 
         <em:targetApplication>
             <Description>
