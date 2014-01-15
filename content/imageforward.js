@@ -12,6 +12,9 @@ var gImageForward = {
         window.removeEventListener('unload', gImageForward.onUnload, false);
     },
 
+    onClick: function() {
+    }
+
 };
 
 window.addEventListener('load', gImageForward.onLoad, false);
