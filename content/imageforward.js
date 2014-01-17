@@ -47,11 +47,11 @@ var gImageForward = {
 
     matchURLs: function(urls) {
         var result = new Array();
-        var regexp = new RegExp("[^\?]+\.jpg$", "i");
+        var regexp = new RegExp("[^\?]+\.(jpg|png)$", "i");
         for(var index = 0; index < urls.length; index++) {
             var urlString = urls[index].toString();
-            if (urlString.match(regexp)) {
-                result.push(urls[index].toString());
+            if (urlString.match(regexp) && result.indexOf(urlString) == -1) {
+                result.push(urlString);
             }
         }
         return result;
@@ -60,7 +60,7 @@ var gImageForward = {
     addURLsToHistoryAndAdvance: function(urls, referrer) {
         for (var index = 0; index < urls.length; index++) {
             var url = urls[index];
-            gImageForward.addHistoryEntry("" + index, url, referrer);
+            gImageForward.addHistoryEntry(url.split('?')[0].split('/').pop(), url, referrer);
         }
         // have to go back actually, because the history index is changed by
         // adding an entry while not loading it
