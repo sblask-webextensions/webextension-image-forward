@@ -18,11 +18,9 @@ var gImageForward = {
     },
 
     onClick: function() {
-        var documentURLs = gImageForward.getURLs(gImageForward.getDocuments());
-        for(var index = 0; index < documentURLs.length; index++) {
-            var urlsAndReferrer = documentURLs[index];
-            gImageForward.addURLsToHistoryAndAdvance(urlsAndReferrer[0], urlsAndReferrer[1]);
-        }
+        var documents = gImageForward.getDocuments();
+        var urlsAndReferrers = gImageForward.getURLsAndReferrers(documents);
+        gImageForward.addURLsToHistoryAndAdvance(urlsAndReferrers);
     },
 
     getDocuments: function() {
@@ -34,15 +32,23 @@ var gImageForward = {
         return documents;
     },
 
-    getURLs: function(documents) {
+    getURLsAndReferrers: function(documents) {
         var result = new Array()
-        for(var index = 0; index < documents.length; index++) {
-            var tuple = new Array();
-            tuple.push(gImageForward.matchURLs(documents[index].links));
-            tuple.push(documents[index].URL);
-            result.push(tuple);
+        for(var documentIndex = 0; documentIndex < documents.length; documentIndex++) {
+            var urls = gImageForward.matchURLs(documents[documentIndex].links);
+            var referrer = documents[documentIndex].URL;
+            for(var urlIndex = 0; urlIndex < urls.length; urlIndex++) {
+                result.push(gImageForward.makeTuple(urls[urlIndex], referrer));
+            }
         }
         return result;
+    },
+
+    makeTuple: function(first, second) {
+        var tuple = new Array()
+        tuple.push(first);
+        tuple.push(second);
+        return tuple;
     },
 
     matchURLs: function(urls) {
@@ -57,21 +63,24 @@ var gImageForward = {
         return result;
     },
 
-    addURLsToHistoryAndAdvance: function(urls, referrer) {
-        for (var index = 0; index < urls.length; index++) {
-            var url = urls[index];
-            gImageForward.addHistoryEntry(url.split('?')[0].split('/').pop(), url, referrer);
+    addURLsToHistoryAndAdvance: function(urlsAndReferrers) {
+        for (var index = 0; index < urlsAndReferrers.length; index++) {
+            var url = urlsAndReferrers[index][0];
+            var title = url.split('?')[0].split('/').pop();
+            var referrer = urlsAndReferrers[index][1];
+            var historyEntry = gImageForward.makeHistoryEntry(title, url, referrer)
+            gImageForward.history().addEntry(historyEntry, true);
         }
         // have to go back actually, because the history index is changed by
         // adding an entry while not loading it
-        gBrowser.selectedBrowser.contentWindow.history.go(-urls.length + 1);
+        gBrowser.selectedBrowser.contentWindow.history.go(-urlsAndReferrers.length + 1);
     },
 
-    addHistoryEntry: function(title, uri, referrerURI) {
+    history: function() {
         var history = gBrowser.selectedBrowser.sessionHistory;
         history.QueryInterface(Components.interfaces.nsISHistoryInternal);
         history.maxLength = 99999;
-        history.addEntry(gImageForward.makeHistoryEntry(title, uri, referrerURI), true);
+        return history;
     },
 
     makeURI: function(uriString) {
