@@ -101,6 +101,15 @@ var gImageForward = {
         historyEntry.setURI(gImageForward.makeURI(uri));
         historyEntry.referrerURI = gImageForward.makeURI(referrerURI);
         return historyEntry;
+    },
+    
+    // for debugging only
+    printHistory: function() {
+        var historyEntries = new Array()
+        for (var index = 0; index < gImageForward.history().count; index++) {
+            historyEntries.push(gImageForward.history().getEntryAtIndex(index, false).URI.asciiSpec);
+        }
+        console.log(historyEntries);
     }
 
 };
