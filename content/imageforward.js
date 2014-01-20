@@ -1,5 +1,9 @@
 var gImageForward = {
 
+    preferences: Components
+                     .classes["@mozilla.org/preferences-service;1"]
+                     .getService(Components.interfaces.nsIPrefService),
+
     onLoad: function() {
         if ('undefined' == typeof gBrowser) {
             return;
@@ -48,7 +52,9 @@ var gImageForward = {
 
     matchURLs: function(urls) {
         var result = new Array();
-        var regexp = new RegExp("[^\?]+\.(jpg|png)$", "i");
+        var regexpPreferencesKey = "extensions.imageforward.linkRegExp";
+        var regexpString = gImageForward.preferences.getCharPref(regexpPreferencesKey);
+        var regexp = new RegExp(regexpString, "i");
         for(var index = 0; index < urls.length; index++) {
             var urlString = urls[index].toString();
             if (urlString.match(regexp) && result.indexOf(urlString) == -1) {
