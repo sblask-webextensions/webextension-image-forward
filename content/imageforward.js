@@ -17,9 +17,29 @@ var gImageForward = {
     },
 
     go: function() {
-        var documents = gImageForward.getDocuments();
-        var urlsAndReferrers = gImageForward.getURLsAndReferrers(documents);
-        gImageForward.addURLsToHistoryAndAdvance(urlsAndReferrers);
+        if (!gBrowser.selectedBrowser.imageForwardLinks) {
+            var documents = gImageForward.getDocuments();
+            var urlsAndReferrers = gImageForward.getURLsAndReferrers(documents);
+            gBrowser.selectedBrowser.imageForwardLinks = urlsAndReferrers;
+            gBrowser.selectedBrowser.imageForwardNextIndex = 0;
+        }
+        var links = gBrowser.selectedBrowser.imageForwardLinks;
+        var index = gBrowser.selectedBrowser.imageForwardNextIndex;
+        if (index > links.length -1) {
+            gBrowser.selectedBrowser.contentWindow.history.go(-links.length)
+            gBrowser.selectedBrowser.imageForwardNextIndex = 0;
+        } else {
+            var currentUrlAndReferrer = links[index];
+            var url = currentUrlAndReferrer[0];
+            if (url.indexOf("file://") == 0) {
+                gBrowser.selectedBrowser.contentDocument.location.assign(url)
+            } else {
+                var referrerUrl = currentUrlAndReferrer[1];
+                gBrowser.selectedBrowser.loadURI(url, makeURI(referrerUrl), null);
+            }
+            gBrowser.selectedBrowser.imageForwardNextIndex = index + 1;
+        }
+
     },
 
     getDocuments: function() {
