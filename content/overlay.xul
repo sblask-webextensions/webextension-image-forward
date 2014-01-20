@@ -1,8 +1,8 @@
 <?xml version='1.0'?>
 <!DOCTYPE overlay SYSTEM "chrome://imageforward/locale/overlay.dtd">
 <overlay xmlns='http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul'>
-    <popup id="contentAreaContextMenu">
-        <menuitem id="imageForwardContextMenuItem" label="ImageForward" class="menuitem-iconic" image="chrome://imageforward/skin/image-forward.png" onclick="gImageForward.onClick()"/>
-    </popup>
-<script type='application/x-javascript' src='chrome://imageforward/content/imageforward.js'></script>
+    <keyset id="mainKeyset">
+        <key id="imageforward-go" key=" " modifiers="accel" oncommand="gImageForward.go()"/>
+    </keyset> 
+    <script type='application/x-javascript' src='chrome://imageforward/content/imageforward.js'></script>
 </overlay>

@@ -6,18 +6,13 @@ var gImageForward = {
         }
         window.removeEventListener('load', gImageForward.onLoad, false);
         window.addEventListener('unload', gImageForward.onUnload, false);
-        document.getElementById("contentAreaContextMenu").addEventListener("popupshowing", gImageForward.onPopupShowing, false);
     },
 
     onUnload: function() {
         window.removeEventListener('unload', gImageForward.onUnload, false);
     },
 
-    onPopupShowing: function(anEvent) {
-        document.getElementById("imageForwardContextMenuItem").disabled = false;
-    },
-
-    onClick: function() {
+    go: function() {
         var documents = gImageForward.getDocuments();
         var urlsAndReferrers = gImageForward.getURLsAndReferrers(documents);
         gImageForward.addURLsToHistoryAndAdvance(urlsAndReferrers);
