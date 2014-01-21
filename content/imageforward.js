@@ -21,6 +21,9 @@ var gImageForward = {
         if (!browser) {
             return;
         }
+        if (!browser.imageForwardListenerAdded) {
+            gImageForward.addHistoryListener(browser)
+        }
         if (!browser.imageForwardLinks) {
             gImageForward.initialize(browser);
         }
@@ -101,55 +104,51 @@ var gImageForward = {
         return result;
     },
 
-    addURLsToHistoryAndAdvance: function(urlsAndReferrers) {
-        for (var index = 0; index < urlsAndReferrers.length; index++) {
-            var url = urlsAndReferrers[index][0];
-            var title = url.split('?')[0].split('/').pop();
-            var referrer = urlsAndReferrers[index][1];
-            var historyEntry = gImageForward.makeHistoryEntry(title, url, referrer)
-            gImageForward.history().addEntry(historyEntry, true);
+    addHistoryListener: function(browser) {
+        console.log("AddHistoryListener");
+        browser.sessionHistory.addSHistoryListener(gImageForward.historyListener(browser));
+        browser.imageForwardListenerAdded = true;
+    },
+
+    historyListener: function(browser) {
+        return {
+            QueryInterface: XPCOMUtils.generateQI([
+                Components.interfaces.nsISHistoryListener,
+                Components.interfaces.nsISupports,
+                Components.interfaces.nsISupportsWeakReference
+            ]),
+
+            OnHistoryGoBack: function () {
+                console.log("HistoryGoBack");
+                return true;
+            },
+
+            OnHistoryGoForward: function () {
+                console.log("HistoryGoForward");
+                return true;
+            },
+
+            OnHistoryGotoIndex: function () {
+                console.log("HistoryGotoIndex");
+                return true;
+            },
+
+            OnHistoryNewEntry: function () {
+                console.log("HistoryNewEntry");
+                return true;
+            },
+
+            OnHistoryPurge: function () {
+                console.log("HistoryPurge");
+                return true;
+            },
+
+            OnHistoryReload: function () {
+                console.log("HistoryReload");
+                return true;
+            }
         }
-        // have to go back actually, because the history index is changed by
-        // adding an entry while not loading it
-        gBrowser.selectedBrowser.contentWindow.history.go(-urlsAndReferrers.length + 1);
-    },
-
-    history: function() {
-        var history = gBrowser.selectedBrowser.sessionHistory;
-        history.QueryInterface(Components.interfaces.nsISHistoryInternal);
-        history.maxLength = 99999;
-        return history;
-    },
-
-    makeURI: function(uriString) {
-        var uriObject =
-            Components
-                .classes["@mozilla.org/network/standard-url;1"]
-                .createInstance(Components.interfaces.nsIURI);
-        uriObject.spec = uriString;
-        return uriObject;
-    },
-
-    makeHistoryEntry: function(title, uri, referrerURI) {
-        var historyEntry =
-            Components
-                .classes['@mozilla.org/browser/session-history-entry;1']
-                .createInstance(Components.interfaces.nsISHEntry);
-        historyEntry.setTitle(title);
-        historyEntry.setURI(gImageForward.makeURI(uri));
-        historyEntry.referrerURI = gImageForward.makeURI(referrerURI);
-        return historyEntry;
-    },
-    
-    // for debugging only
-    printHistory: function() {
-        var historyEntries = new Array()
-        for (var index = 0; index < gImageForward.history().count; index++) {
-            historyEntries.push(gImageForward.history().getEntryAtIndex(index, false).URI.asciiSpec);
-        }
-        console.log(historyEntries);
     }
-
 };
 
 window.addEventListener('load', gImageForward.onLoad, false);
