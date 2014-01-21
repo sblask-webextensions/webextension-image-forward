@@ -17,29 +17,27 @@ var gImageForward = {
     },
 
     go: function() {
-        if (!gBrowser.selectedBrowser.imageForwardLinks) {
-            var documents = gImageForward.getDocuments();
-            var urlsAndReferrers = gImageForward.getURLsAndReferrers(documents);
-            gBrowser.selectedBrowser.imageForwardLinks = urlsAndReferrers;
-            gBrowser.selectedBrowser.imageForwardNextIndex = 0;
+        var browser = gBrowser.selectedBrowser;
+        if (!browser) {
+            return;
         }
-        var links = gBrowser.selectedBrowser.imageForwardLinks;
-        var index = gBrowser.selectedBrowser.imageForwardNextIndex;
-        if (index > links.length -1) {
-            gBrowser.selectedBrowser.contentWindow.history.go(-links.length)
-            gBrowser.selectedBrowser.imageForwardNextIndex = 0;
+        if (!browser.imageForwardLinks) {
+            gImageForward.initialize(browser);
+        }
+        if (browser.imageForwardNextIndex > browser.imageForwardLinks.length - 1) {
+            gImageForward.goBackAndReset(browser);
         } else {
-            var currentUrlAndReferrer = links[index];
-            var url = currentUrlAndReferrer[0];
-            if (url.indexOf("file://") == 0) {
-                gBrowser.selectedBrowser.contentDocument.location.assign(url)
-            } else {
-                var referrerUrl = currentUrlAndReferrer[1];
-                gBrowser.selectedBrowser.loadURI(url, makeURI(referrerUrl), null);
-            }
-            gBrowser.selectedBrowser.imageForwardNextIndex = index + 1;
+            gImageForward.goForward(browser);
         }
+    },
 
+    initialize: function(browser) {
+        var documents = gImageForward.getDocuments();
+        var urlsAndReferrers = gImageForward.getURLsAndReferrers(documents);
+        if (urlsAndReferrers.length > 0) {
+            browser.imageForwardLinks = urlsAndReferrers;
+            browser.imageForwardNextIndex = 0;
+        }
     },
 
     getDocuments: function() {
@@ -49,6 +47,25 @@ var gImageForward = {
             documents.push(gBrowser.selectedBrowser.contentWindow.frames[index].document);
         }
         return documents;
+    },
+
+    goBackAndReset: function(browser) {
+        browser.contentWindow.history.go(-browser.imageForwardLinks.length)
+        browser.imageForwardLinks = undefined;
+        browser.imageForwardNextIndex = -1;
+    },
+
+    goForward: function(browser) {
+        var urlAndReferrer = browser.imageForwardLinks[browser.imageForwardNextIndex];
+        var url = urlAndReferrer[0];
+        if (url.indexOf("file://") == 0) {
+            // can't use loadURI for local links - that's ok, no need for referrer here
+            browser.contentDocument.location.assign(url)
+        } else {
+            var referrerUrl = urlAndReferrer[1];
+            browser.loadURI(url, makeURI(referrerUrl), null);
+        }
+        browser.imageForwardNextIndex = browser.imageForwardNextIndex + 1;
     },
 
     getURLsAndReferrers: function(documents) {
