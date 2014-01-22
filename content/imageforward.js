@@ -52,7 +52,11 @@ var gImageForward = {
         }
         // reached last image, go back in history to initial page
         if (browser.imageForwardNextIndex > browser.imageForwardLinks.length - 1) {
-            var backToStartAdjustment = -browser.imageForwardLinks.length;
+            // have to manually keep track of steps taken forward as urls can
+            // skip history when iterating to fast
+            // browser.imageForwardLinks.length would point to before the
+            // initial page then
+            var backToStartAdjustment = -browser.imageForwardHistoryIndex;
             gImageForward.reset(browser);
             browser.contentWindow.history.go(backToStartAdjustment);
             return;
@@ -65,12 +69,14 @@ var gImageForward = {
         browser.imageForwardLinks = urlsAndReferrers;
         browser.imageForwardNextIndex = 0;
         browser.imageForwardHistoryAdjust = 0;
+        browser.imageForwardHistoryIndex = 0;
     },
 
     reset: function(browser) {
         browser.imageForwardLinks = undefined;
         browser.imageForwardNextIndex = -1;
         browser.imageForwardHistoryAdjust = 0;
+        browser.imageForwardHistoryIndex = 0;
     },
 
     getDocuments: function() {
@@ -159,6 +165,15 @@ var gImageForward = {
         browser.sessionHistory.addSHistoryListener(browser.imageForwardListener);
     },
 
+    containsURL: function(urlsAndReferrers, url) {
+        for(var index = 0; index < urlsAndReferrers.length; index++) {
+            if (urlsAndReferrers[index][0] == url){
+                return true;
+            }
+        }
+        return false;
+    },
+
     historyListener: function(browser) {
         return {
             QueryInterface: XPCOMUtils.generateQI([
@@ -195,6 +210,13 @@ var gImageForward = {
 
             OnHistoryNewEntry: function (uri) {
                 console.log("HistoryNewEntry");
+                if (browser.imageForwardLinks){
+                    if (gImageForward.containsURL(browser.imageForwardLinks, uri.asciiSpec)) {
+                        browser.imageForwardHistoryIndex += 1;
+                    } else {
+                        gImageForward.reset(browser);
+                    }
+                }
                 return true;
             }
         }
