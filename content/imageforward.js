@@ -34,8 +34,9 @@ var gImageForward = {
             return
         }
         if (browser.imageForwardNextIndex > browser.imageForwardLinks.length - 1) {
-            gImageForward.goBack(browser);
+            var backToStartAdjustment = -browser.imageForwardLinks.length;
             gImageForward.reset(browser);
+            browser.contentWindow.history.go(backToStartAdjustment);
         } else {
             gImageForward.goForward(browser);
         }
@@ -66,10 +67,6 @@ var gImageForward = {
             documents.push(gBrowser.selectedBrowser.contentWindow.frames[index].document);
         }
         return documents;
-    },
-
-    goBack: function(browser) {
-        browser.contentWindow.history.go(-browser.imageForwardLinks.length);
     },
 
     goForward: function(browser) {
@@ -135,7 +132,7 @@ var gImageForward = {
                 Components.interfaces.nsISupportsWeakReference
             ]),
 
-            OnHistoryGoBack: function () {
+            OnHistoryGoBack: function (uri) {
                 console.log("HistoryGoBack");
                 if (browser.imageForwardLinks){
                     browser.imageForwardHistoryAdjust -= 1;
@@ -143,7 +140,7 @@ var gImageForward = {
                 return true;
             },
 
-            OnHistoryGoForward: function () {
+            OnHistoryGoForward: function (uri) {
                 console.log("HistoryGoForward");
                 if (browser.imageForwardLinks){
                     browser.imageForwardHistoryAdjust += 1;
@@ -151,23 +148,16 @@ var gImageForward = {
                 return true;
             },
 
-            OnHistoryGotoIndex: function () {
-                console.log("HistoryGotoIndex");
+            OnHistoryGotoIndex: function (index, uri) {
+                console.log("HistoryGotoIndex " + index);
+                if (browser.imageForwardLinks){
+                    browser.imageForwardHistoryAdjust = index - browser.sessionHistory.index;
+                }
                 return true;
             },
 
-            OnHistoryNewEntry: function () {
+            OnHistoryNewEntry: function (uri) {
                 console.log("HistoryNewEntry");
-                return true;
-            },
-
-            OnHistoryPurge: function () {
-                console.log("HistoryPurge");
-                return true;
-            },
-
-            OnHistoryReload: function () {
-                console.log("HistoryReload");
                 return true;
             }
         }
