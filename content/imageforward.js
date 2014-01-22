@@ -1,5 +1,10 @@
 var gImageForward = {
 
+    minHeightPreferencesKey: "extensions.imageforward.minHeight",
+    minWidthPreferencesKey: "extensions.imageforward.minWidth",
+    linkURLRegexpPreferencesKey: "extensions.imageforward.linkURLRegExp",
+    imageURLRegexpPreferencesKey: "extensions.imageforward.imageURLRegExp",
+
     preferences: Components
                      .classes["@mozilla.org/preferences-service;1"]
                      .getService(Components.interfaces.nsIPrefService),
@@ -16,14 +21,23 @@ var gImageForward = {
         window.removeEventListener('unload', gImageForward.onUnload, false);
     },
 
-    go: function() {
+    iterateImages: function() {
+        gImageForward.go(function(document){return document.images}, gImageForward.filterImages);
+    },
+
+    iterateImageLinks: function() {
+        gImageForward.go(function(document){return document.links}, gImageForward.matchLinkURLs);
+    },
+
+    go: function(extractorFunction, filterFunction) {
         var browser = gBrowser.selectedBrowser;
         if (!browser) {
             return;
         }
         if (!browser.imageForwardLinks) {
             var documents = gImageForward.getDocuments();
-            var urlsAndReferrers = gImageForward.getLinkURLsAndReferrers(documents);
+            var urlsAndReferrers =
+                gImageForward.getURLsAndReferrers(documents, extractorFunction, filterFunction);
             if (urlsAndReferrers.length == 0) {
                 return;
             }
@@ -75,16 +89,17 @@ var gImageForward = {
             // can't use loadURI for local links - that's ok, no need for referrer here
             browser.contentDocument.location.assign(url)
         } else {
-            var referrerUrl = urlAndReferrer[1];
-            browser.loadURI(url, makeURI(referrerUrl), null);
+            var referrerURL = urlAndReferrer[1];
+            browser.loadURI(url, makeURI(referrerURL), null);
         }
         browser.imageForwardNextIndex += 1;
     },
 
-    getLinkURLsAndReferrers: function(documents) {
+    getURLsAndReferrers: function(documents, extractorFunction, filterFunction) {
         var result = new Array()
         for(var documentIndex = 0; documentIndex < documents.length; documentIndex++) {
-            var urls = gImageForward.matchURLs(documents[documentIndex].links);
+            var extractedThings = extractorFunction(documents[documentIndex]);
+            var urls = filterFunction(extractedThings);
             var referrer = documents[documentIndex].URL;
             for(var urlIndex = 0; urlIndex < urls.length; urlIndex++) {
                 result.push(gImageForward.makeTuple(urls[urlIndex], referrer));
@@ -100,14 +115,35 @@ var gImageForward = {
         return tuple;
     },
 
-    matchURLs: function(urls) {
+    filterImages: function(images) {
         var result = new Array();
-        var regexpPreferencesKey = "extensions.imageforward.linkRegExp";
-        var regexpString = gImageForward.preferences.getCharPref(regexpPreferencesKey);
+        var minHeight = gImageForward.preferences.getIntPref(gImageForward.minHeightPreferencesKey);
+        var minWidth = gImageForward.preferences.getIntPref(gImageForward.minWidthPreferencesKey);
+        var regexpString = gImageForward.preferences.getCharPref(gImageForward.imageURLRegexpPreferencesKey);
+        var regexp = new RegExp(regexpString, "i");
+        for(var index = 0; index < images.length; index++) {
+            var image = images[index];
+            var imageURL = image.src;
+            var isMatch = imageURL.match(regexp);
+            var isHighEnough = image.height >= minHeight;
+            var isWideEnough = image.width >= minWidth;
+            var isKnown = result.indexOf(imageURL) >= 0;
+            if (isMatch && !isKnown && isHighEnough && isWideEnough) {
+                result.push(imageURL);
+            }
+        }
+        return result;
+    },
+
+    matchLinkURLs: function(urls) {
+        var result = new Array();
+        var regexpString = gImageForward.preferences.getCharPref(gImageForward.linkURLRegexpPreferencesKey);
         var regexp = new RegExp(regexpString, "i");
         for(var index = 0; index < urls.length; index++) {
             var urlString = urls[index].toString();
-            if (urlString.match(regexp) && result.indexOf(urlString) == -1) {
+            var isMatch = urlString.match(regexp);
+            var isKnown = result.indexOf(urlString) >= 0;
+            if (isMatch && !isKnown) {
                 result.push(urlString);
             }
         }
@@ -133,6 +169,7 @@ var gImageForward = {
 
             OnHistoryGoBack: function (uri) {
                 console.log("HistoryGoBack");
+                // TODO reset when back on start
                 if (browser.imageForwardLinks){
                     browser.imageForwardHistoryAdjust -= 1;
                 }
@@ -149,6 +186,7 @@ var gImageForward = {
 
             OnHistoryGotoIndex: function (index, uri) {
                 console.log("HistoryGotoIndex " + index);
+                // TODO reset when back on start
                 if (browser.imageForwardLinks){
                     browser.imageForwardHistoryAdjust = index - browser.sessionHistory.index;
                 }
