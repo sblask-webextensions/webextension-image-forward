@@ -21,14 +21,21 @@ var gImageForward = {
         if (!browser) {
             return;
         }
-        if (!browser.imageForwardListenerAdded) {
-            gImageForward.addHistoryListener(browser)
-        }
         if (!browser.imageForwardLinks) {
-            gImageForward.initialize(browser);
+            if (!gImageForward.initialize(browser)) {
+                // no links found
+                return;
+            }
+        }
+        // need to keep track of back/forward movements and new pages
+        gImageForward.ensureHistoryListener(browser);
+        if (browser.imageForwardHistoryAdjust < 0) {
+            browser.contentWindow.history.forward();
+            return
         }
         if (browser.imageForwardNextIndex > browser.imageForwardLinks.length - 1) {
-            gImageForward.goBackAndReset(browser);
+            gImageForward.goBack(browser);
+            gImageForward.reset(browser);
         } else {
             gImageForward.goForward(browser);
         }
@@ -40,7 +47,16 @@ var gImageForward = {
         if (urlsAndReferrers.length > 0) {
             browser.imageForwardLinks = urlsAndReferrers;
             browser.imageForwardNextIndex = 0;
+            browser.imageForwardHistoryAdjust = 0;
+            return true;
         }
+        return false;
+    },
+
+    reset: function(browser) {
+        browser.imageForwardLinks = undefined;
+        browser.imageForwardNextIndex = -1;
+        browser.imageForwardHistoryAdjust = 0;
     },
 
     getDocuments: function() {
@@ -52,10 +68,8 @@ var gImageForward = {
         return documents;
     },
 
-    goBackAndReset: function(browser) {
-        browser.contentWindow.history.go(-browser.imageForwardLinks.length)
-        browser.imageForwardLinks = undefined;
-        browser.imageForwardNextIndex = -1;
+    goBack: function(browser) {
+        browser.contentWindow.history.go(-browser.imageForwardLinks.length);
     },
 
     goForward: function(browser) {
@@ -68,7 +82,7 @@ var gImageForward = {
             var referrerUrl = urlAndReferrer[1];
             browser.loadURI(url, makeURI(referrerUrl), null);
         }
-        browser.imageForwardNextIndex = browser.imageForwardNextIndex + 1;
+        browser.imageForwardNextIndex += 1;
     },
 
     getURLsAndReferrers: function(documents) {
@@ -104,10 +118,13 @@ var gImageForward = {
         return result;
     },
 
-    addHistoryListener: function(browser) {
-        console.log("AddHistoryListener");
-        browser.sessionHistory.addSHistoryListener(gImageForward.historyListener(browser));
-        browser.imageForwardListenerAdded = true;
+    ensureHistoryListener: function(browser) {
+        if (browser.imageForwardListener) {
+            return
+        }
+        // need to keep a reference, seems to be garbage collected otherwise
+        browser.imageForwardListener = gImageForward.historyListener(browser);
+        browser.sessionHistory.addSHistoryListener(browser.imageForwardListener);
     },
 
     historyListener: function(browser) {
@@ -120,11 +137,17 @@ var gImageForward = {
 
             OnHistoryGoBack: function () {
                 console.log("HistoryGoBack");
+                if (browser.imageForwardLinks){
+                    browser.imageForwardHistoryAdjust -= 1;
+                }
                 return true;
             },
 
             OnHistoryGoForward: function () {
                 console.log("HistoryGoForward");
+                if (browser.imageForwardLinks){
+                    browser.imageForwardHistoryAdjust += 1;
+                }
                 return true;
             },
 
