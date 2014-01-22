@@ -22,36 +22,35 @@ var gImageForward = {
             return;
         }
         if (!browser.imageForwardLinks) {
-            if (!gImageForward.initialize(browser)) {
-                // no links found
+            var documents = gImageForward.getDocuments();
+            var urlsAndReferrers = gImageForward.getLinkURLsAndReferrers(documents);
+            if (urlsAndReferrers.length == 0) {
                 return;
             }
+            gImageForward.initialize(browser, urlsAndReferrers);
         }
         // need to keep track of back/forward movements and new pages
         gImageForward.ensureHistoryListener(browser);
+        // user went in back in history, just go forward in history
         if (browser.imageForwardHistoryAdjust < 0) {
             browser.contentWindow.history.forward();
-            return
+            return;
         }
+        // reached last image, go back in history to initial page
         if (browser.imageForwardNextIndex > browser.imageForwardLinks.length - 1) {
             var backToStartAdjustment = -browser.imageForwardLinks.length;
             gImageForward.reset(browser);
             browser.contentWindow.history.go(backToStartAdjustment);
-        } else {
-            gImageForward.goForward(browser);
+            return;
         }
+        // actually load the next image
+        gImageForward.goForward(browser);
     },
 
-    initialize: function(browser) {
-        var documents = gImageForward.getDocuments();
-        var urlsAndReferrers = gImageForward.getURLsAndReferrers(documents);
-        if (urlsAndReferrers.length > 0) {
-            browser.imageForwardLinks = urlsAndReferrers;
-            browser.imageForwardNextIndex = 0;
-            browser.imageForwardHistoryAdjust = 0;
-            return true;
-        }
-        return false;
+    initialize: function(browser, urlsAndReferrers) {
+        browser.imageForwardLinks = urlsAndReferrers;
+        browser.imageForwardNextIndex = 0;
+        browser.imageForwardHistoryAdjust = 0;
     },
 
     reset: function(browser) {
@@ -82,7 +81,7 @@ var gImageForward = {
         browser.imageForwardNextIndex += 1;
     },
 
-    getURLsAndReferrers: function(documents) {
+    getLinkURLsAndReferrers: function(documents) {
         var result = new Array()
         for(var documentIndex = 0; documentIndex < documents.length; documentIndex++) {
             var urls = gImageForward.matchURLs(documents[documentIndex].links);
