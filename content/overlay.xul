@@ -2,8 +2,8 @@
 <!DOCTYPE overlay SYSTEM "chrome://imageforward/locale/overlay.dtd">
 <overlay xmlns='http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul'>
     <keyset id="mainKeyset">
-        <key id="imageforward-iterate-images" key=" " modifiers="accel" oncommand="gImageForward.iterateImages()"/>
-        <key id="imageforward-iterate-image-links" key=" " modifiers="accel shift" oncommand="gImageForward.iterateImageLinks()"/>
+        <key id="imageforward-iterate-images" key=" " modifiers="accel shift" oncommand="gImageForward.iterateImages()"/>
+        <key id="imageforward-iterate-image-links" key=" " modifiers="accel" oncommand="gImageForward.iterateImageLinks()"/>
     </keyset> 
     <script type='application/x-javascript' src='chrome://imageforward/content/imageforward.js'></script>
 </overlay>
