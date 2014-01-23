@@ -50,6 +50,10 @@ var gImageForward = {
         );
     },
 
+    abortIteration: function() {
+        gImageForward.backToStart(gBrowser.selectedBrowser);
+    },
+
     go: function(extractorFunction, filterFunction) {
         var browser = gBrowser.selectedBrowser;
         if (!browser) {
@@ -76,13 +80,7 @@ var gImageForward = {
         }
         var lastIndex = browser.imageForwardLinks.length - 1;
         if (browser.imageForwardNextIndex > lastIndex) {
-            // have to manually keep track of steps taken forward as urls can
-            // skip history when iterating to fast
-            // browser.imageForwardLinks.length would point to before the
-            // initial page then
-            var backToStartAdjustment = -browser.imageForwardHistoryIndex;
-            gImageForward.reset(browser);
-            browser.contentWindow.history.go(backToStartAdjustment);
+            gImageForward.backToStart(browser)
             return;
         }
         gImageForward.loadNextImage(browser);
@@ -91,7 +89,11 @@ var gImageForward = {
     initialize: function(browser, urlsAndReferrers) {
         browser.imageForwardLinks = urlsAndReferrers;
         browser.imageForwardNextIndex = 0;
+        // track uses os back/forward function of browser
         browser.imageForwardHistoryAdjust = 0;
+        // manually keep track of what is added to history as urls can skip
+        // history when iterating to fast. `browser.imageForwardLinks.length`
+        // would point to before the initial page then
         browser.imageForwardHistoryIndex = 0;
     },
 
@@ -100,6 +102,14 @@ var gImageForward = {
         browser.imageForwardNextIndex = -1;
         browser.imageForwardHistoryAdjust = 0;
         browser.imageForwardHistoryIndex = 0;
+    },
+
+    backToStart: function(browser) {
+        var backToStartAdjustment = 
+            -(browser.imageForwardHistoryIndex
+              + browser.imageForwardHistoryAdjust);
+        gImageForward.reset(browser);
+        browser.contentWindow.history.go(backToStartAdjustment);
     },
 
     getDocuments: function(browser) {

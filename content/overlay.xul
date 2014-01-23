@@ -4,6 +4,7 @@
     <keyset id="mainKeyset">
         <key id="imageforward-iterate-images" key=" " modifiers="accel shift" oncommand="gImageForward.iterateImages()"/>
         <key id="imageforward-iterate-image-links" key=" " modifiers="accel" oncommand="gImageForward.iterateImageLinks()"/>
+        <key id="imageforward-abort-iterations" keycode="VK_ESCAPE" modifiers="accel shift" oncommand="gImageForward.abortIteration()"/>
     </keyset> 
     <script type='application/x-javascript' src='chrome://imageforward/content/imageforward.js'></script>
 </overlay>
