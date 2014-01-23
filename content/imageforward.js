@@ -1,13 +1,28 @@
 var gImageForward = {
 
-    minHeightPreferencesKey: "extensions.imageforward.minHeight",
-    minWidthPreferencesKey: "extensions.imageforward.minWidth",
-    linkURLRegexpPreferencesKey: "extensions.imageforward.linkURLRegExp",
-    imageURLRegexpPreferencesKey: "extensions.imageforward.imageURLRegExp",
-
     preferences: Components
                      .classes["@mozilla.org/preferences-service;1"]
                      .getService(Components.interfaces.nsIPrefService),
+
+    minHeight: function() {
+        return gImageForward.preferences
+                   .getIntPref("extensions.imageforward.minHeight")
+    },
+
+    minWidth: function() {
+        return gImageForward.preferences
+                   .getIntPref("extensions.imageforward.minWidth")
+    },
+
+    linkURLRegExp: function() {
+        return gImageForward.preferences
+                   .getCharPref("extensions.imageforward.linkURLRegExp")
+    },
+
+    imageURLRegExp: function() {
+        return gImageForward.preferences
+                   .getCharPref("extensions.imageforward.imageURLRegExp")
+    },
 
     onLoad: function() {
         if ('undefined' == typeof gBrowser) {
@@ -22,11 +37,17 @@ var gImageForward = {
     },
 
     iterateImages: function() {
-        gImageForward.go(function(document){return document.images}, gImageForward.filterImages);
+        gImageForward.go(
+            function(document){return document.images},
+            gImageForward.filterImages
+        );
     },
 
     iterateImageLinks: function() {
-        gImageForward.go(function(document){return document.links}, gImageForward.matchLinkURLs);
+        gImageForward.go(
+            function(document){return document.links},
+            gImageForward.matchLinkURLs
+        );
     },
 
     go: function(extractorFunction, filterFunction) {
@@ -35,9 +56,12 @@ var gImageForward = {
             return;
         }
         if (!browser.imageForwardLinks) {
-            var documents = gImageForward.getDocuments();
-            var urlsAndReferrers =
-                gImageForward.getURLsAndReferrers(documents, extractorFunction, filterFunction);
+            var documents = gImageForward.getDocuments(browser);
+            var urlsAndReferrers = gImageForward.urlsAndReferrers(
+                documents,
+                extractorFunction,
+                filterFunction
+            );
             if (urlsAndReferrers.length == 0) {
                 return;
             }
@@ -50,8 +74,8 @@ var gImageForward = {
             browser.contentWindow.history.forward();
             return;
         }
-        // reached last image, go back in history to initial page
-        if (browser.imageForwardNextIndex > browser.imageForwardLinks.length - 1) {
+        var lastIndex = browser.imageForwardLinks.length - 1;
+        if (browser.imageForwardNextIndex > lastIndex) {
             // have to manually keep track of steps taken forward as urls can
             // skip history when iterating to fast
             // browser.imageForwardLinks.length would point to before the
@@ -78,20 +102,22 @@ var gImageForward = {
         browser.imageForwardHistoryIndex = 0;
     },
 
-    getDocuments: function() {
+    getDocuments: function(browser) {
         var documents = new Array();
-        documents.push(gBrowser.selectedBrowser.contentWindow.document);
-        for(var index = 0; index < gBrowser.selectedBrowser.contentWindow.frames.length; index++) {
-            documents.push(gBrowser.selectedBrowser.contentWindow.frames[index].document);
+        documents.push(browser.contentWindow.document);
+        var frames = browser.contentWindow.frames;
+        for(var index = 0; index < frames.length; index++) {
+            documents.push(frames[index].document);
         }
         return documents;
     },
 
     loadNextImage: function(browser) {
-        var urlAndReferrer = browser.imageForwardLinks[browser.imageForwardNextIndex];
+        var urlAndReferrer =
+            browser.imageForwardLinks[browser.imageForwardNextIndex];
         var url = urlAndReferrer[0];
+        // can't use loadURI for local urls - that's ok, no need for referrer
         if (url.indexOf("file://") == 0) {
-            // can't use loadURI for local links - that's ok, no need for referrer here
             browser.contentDocument.location.assign(url)
         } else {
             var referrerURL = urlAndReferrer[1];
@@ -100,12 +126,12 @@ var gImageForward = {
         browser.imageForwardNextIndex += 1;
     },
 
-    getURLsAndReferrers: function(documents, extractorFunction, filterFunction) {
+    urlsAndReferrers: function(documents, extractorFunction, filterFunction) {
         var result = new Array()
-        for(var documentIndex = 0; documentIndex < documents.length; documentIndex++) {
-            var extractedThings = extractorFunction(documents[documentIndex]);
+        for(var docIndex = 0; docIndex < documents.length; docIndex++) {
+            var extractedThings = extractorFunction(documents[docIndex]);
             var urls = filterFunction(extractedThings);
-            var referrer = documents[documentIndex].URL;
+            var referrer = documents[docIndex].URL;
             for(var urlIndex = 0; urlIndex < urls.length; urlIndex++) {
                 result.push(gImageForward.makeTuple(urls[urlIndex], referrer));
             }
@@ -122,16 +148,13 @@ var gImageForward = {
 
     filterImages: function(images) {
         var result = new Array();
-        var minHeight = gImageForward.preferences.getIntPref(gImageForward.minHeightPreferencesKey);
-        var minWidth = gImageForward.preferences.getIntPref(gImageForward.minWidthPreferencesKey);
-        var regexpString = gImageForward.preferences.getCharPref(gImageForward.imageURLRegexpPreferencesKey);
-        var regexp = new RegExp(regexpString, "i");
+        var regexp = new RegExp(gImageForward.imageURLRegExp(), "i");
         for(var index = 0; index < images.length; index++) {
             var image = images[index];
             var imageURL = image.src;
             var isMatch = imageURL.match(regexp);
-            var isHighEnough = image.height >= minHeight;
-            var isWideEnough = image.width >= minWidth;
+            var isHighEnough = image.height >= gImageForward.minHeight();
+            var isWideEnough = image.width >= gImageForward.minWidth();
             var isKnown = result.indexOf(imageURL) >= 0;
             if (isMatch && !isKnown && isHighEnough && isWideEnough) {
                 result.push(imageURL);
@@ -142,8 +165,7 @@ var gImageForward = {
 
     matchLinkURLs: function(urls) {
         var result = new Array();
-        var regexpString = gImageForward.preferences.getCharPref(gImageForward.linkURLRegexpPreferencesKey);
-        var regexp = new RegExp(regexpString, "i");
+        var regexp = new RegExp(gImageForward.linkURLRegExp(), "i");
         for(var index = 0; index < urls.length; index++) {
             var urlString = urls[index].toString();
             var isMatch = urlString.match(regexp);
@@ -159,9 +181,10 @@ var gImageForward = {
         if (browser.imageForwardListener) {
             return
         }
+        var listener = gImageForward.historyListener(browser);
         // need to keep a reference, seems to be garbage collected otherwise
-        browser.imageForwardListener = gImageForward.historyListener(browser);
-        browser.sessionHistory.addSHistoryListener(browser.imageForwardListener);
+        browser.imageForwardListener = listener;
+        browser.sessionHistory.addSHistoryListener(listener);
     },
 
     containsURL: function(urlsAndReferrers, url) {
@@ -202,15 +225,17 @@ var gImageForward = {
                 console.log("HistoryGotoIndex " + index);
                 // TODO reset when back on start
                 if (browser.imageForwardLinks){
-                    browser.imageForwardHistoryAdjust = index - browser.sessionHistory.index;
+                    var historyIndex = browser.sessionHistory.index;
+                    browser.imageForwardHistoryAdjust = index - historyIndex;
                 }
                 return true;
             },
 
             OnHistoryNewEntry: function (uri) {
                 console.log("HistoryNewEntry");
-                if (browser.imageForwardLinks){
-                    if (gImageForward.containsURL(browser.imageForwardLinks, uri.asciiSpec)) {
+                var links = browser.imageForwardLinks;
+                if (links){
+                    if (gImageForward.containsURL(links, uri.asciiSpec)) {
                         browser.imageForwardHistoryIndex += 1;
                     } else {
                         gImageForward.reset(browser);
