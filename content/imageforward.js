@@ -61,8 +61,7 @@ var gImageForward = {
             browser.contentWindow.history.go(backToStartAdjustment);
             return;
         }
-        // actually load the next image
-        gImageForward.goForward(browser);
+        gImageForward.loadNextImage(browser);
     },
 
     initialize: function(browser, urlsAndReferrers) {
@@ -88,7 +87,7 @@ var gImageForward = {
         return documents;
     },
 
-    goForward: function(browser) {
+    loadNextImage: function(browser) {
         var urlAndReferrer = browser.imageForwardLinks[browser.imageForwardNextIndex];
         var url = urlAndReferrer[0];
         if (url.indexOf("file://") == 0) {
