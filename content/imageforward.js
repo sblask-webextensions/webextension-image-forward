@@ -73,6 +73,7 @@ var gImageForward = {
         }
         // need to keep track of back/forward movements and new pages
         gImageForward.ensureHistoryListener(browser);
+        gImageForward.ensureProgressListener(browser);
         // user went in back in history, just go forward in history
         if (browser.imageForwardHistoryAdjust < 0) {
             browser.contentWindow.history.forward();
@@ -187,17 +188,33 @@ var gImageForward = {
         return result;
     },
 
+    ensureProgressListener: function(browser) {
+        if (browser.imageForwardProgressListener) {
+            return
+        }
+        var listener = gImageForward.progressListener(browser);
+        // need to keep a reference, seems to be garbage collected otherwise
+        browser.imageForwardProgressListener = listener;
+        browser.addProgressListener(
+            listener,
+            Components.interfaces.nsIWebProgress.NOTIFY_LOCATION
+        );
+    },
+
     ensureHistoryListener: function(browser) {
-        if (browser.imageForwardListener) {
+        if (browser.imageForwardHistoryListener) {
             return
         }
         var listener = gImageForward.historyListener(browser);
         // need to keep a reference, seems to be garbage collected otherwise
-        browser.imageForwardListener = listener;
+        browser.imageForwardHistoryListener = listener;
         browser.sessionHistory.addSHistoryListener(listener);
     },
 
     containsURL: function(urlsAndReferrers, url) {
+        if (!urlsAndReferrers) {
+            return false;
+        }
         for(var index = 0; index < urlsAndReferrers.length; index++) {
             if (urlsAndReferrers[index][0] == url){
                 return true;
@@ -250,15 +267,39 @@ var gImageForward = {
             },
 
             OnHistoryNewEntry: function (uri) {
-                var links = browser.imageForwardLinks;
-                if (links){
-                    if (gImageForward.containsURL(links, uri.asciiSpec)) {
-                        browser.imageForwardHistoryIndex += 1;
-                    } else {
-                        gImageForward.reset(browser);
-                    }
+                if (browser.imageForwardLinks){
+                    browser.imageForwardHistoryIndex += 1;
                 }
                 return true;
+            }
+        }
+    },
+
+    progressListener: function(browser) {
+        return {
+            QueryInterface: XPCOMUtils.generateQI([
+                "nsIWebProgressListener",
+                "nsISupportsWeakReference"
+            ]),
+
+            onLocationChange: function(
+                    aWebProgress, aRequest, aLocation, aFlags) {
+                if (!browser.imageForwardLinks || !aRequest) {
+                    return false;
+                }
+                // originalURI is not consistently available
+                if (!aRequest.originalURI) {
+                    aRequest.QueryInterface(
+                        Components.interfaces.nsIHttpChannel);
+                }
+                // need to reset when a new URL is entered, but not if it's one
+                // of our image URLs(or a redirect from it - hence originalURI)
+                if (!gImageForward.containsURL(
+                        browser.imageForwardLinks,
+                        aRequest.originalURI.asciiSpec)
+                    ) {
+                    gImageForward.reset(browser);
+                }
             }
         }
     }
