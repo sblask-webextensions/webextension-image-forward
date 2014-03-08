@@ -3,20 +3,19 @@
     <Description about="urn:mozilla:install-manifest">
         <em:id>imageforward@sblask</em:id>
         <em:name>Image Forward</em:name>
-        <em:version>0.1.0</em:version>
+        <em:version>1.0.0</em:version>
         <em:type>2</em:type>
+        <em:bootstrap>true</em:bootstrap>
         <em:creator>Sebastian Blask</em:creator>
 
         <em:homepageURL>https://github.com/sblask/firefox-image-forward</em:homepageURL>
-        <em:description>Adds all image links on a page to the forward browsing history so you can browse through them using forward and back buttons/keyboard shortcuts/gestures/... This mimics a part of Opera's fast forward functionality</em:description>
-
-        <em:iconURL>chrome://imageforward/skin/image-forward.png</em:iconURL>
+        <em:description>Easy cycling through images and image links on a page. Inspired by parts of Opera 12's fast forward.</em:description>
 
         <em:targetApplication>
             <Description>
                 <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
                 <em:minVersion>26.0</em:minVersion>
-                <em:maxVersion>28.*</em:maxVersion>
+                <em:maxVersion>29.*</em:maxVersion>
             </Description>
         </em:targetApplication>
     </Description>

@@ -1,7 +1,2 @@
-content  imageforward  content/
-skin     imageforward  classic/1.0  skin/
-
-overlay  chrome://browser/content/browser.xul  chrome://imageforward/content/overlay.xul
-
-locale	 imageforward  en-US  locale/en-US/
+content imageforward content/
 
