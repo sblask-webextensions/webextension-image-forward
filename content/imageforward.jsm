@@ -24,10 +24,15 @@ function ImageForward() {
         }
     };
 
-    this.makeKeyboardShortcutElement = function(id, keycode, modifiers, fun) {
+    this.makeKeyboardShortcutElement = function(id, key, keycode, modifiers, fun) {
         var element = this.domWindow.document.createElement("key");
         element.setAttribute("id", id);
-        element.setAttribute("keycode", keycode);
+        if (key) {
+            element.setAttribute("key", key);
+        }
+        if (keycode) {
+            element.setAttribute("keycode", keycode);
+        }
         element.setAttribute("modifiers", modifiers);
         element.setAttribute("oncommand", "void(0);");
         element.addEventListener("command", fun, true);
@@ -40,6 +45,7 @@ function ImageForward() {
             this.makeKeyboardShortcutElement(
                 "imageforward-iterate-images",
                 " ",
+                null,
                 "accel shift",
                 this.iterateImages.bind(this)
             );
@@ -48,6 +54,7 @@ function ImageForward() {
             this.makeKeyboardShortcutElement(
                 "imageforward-iterate-image-links",
                 " ",
+                null,
                 "accel",
                 this.iterateImageLinks.bind(this)
             );
@@ -55,6 +62,7 @@ function ImageForward() {
         var abortIterationElement =
             this.makeKeyboardShortcutElement(
                 "imageforward-abort-iterations",
+                null,
                 "VK_ESCAPE",
                 "accel shift",
                 this.abortIteration.bind(this)
