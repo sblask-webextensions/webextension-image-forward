@@ -2,6 +2,11 @@ firefox-image-forward
 =====================
 
 A firefox extension for easy cycling through images and image links on a page.
+You can use `Ctrl Shift Space` to iterate through embedded images on for example
+[The Big Picture](http://www.boston.com/bigpicture/)
+and `Ctrl Space` to iterate through the images linked on for example
+[Desktop Wallpaper](http://hddesktopwallpaperblog.blogspot.se/2012/06/nature-wallpaper.html)
+
 Inspired by parts of Opera 12's fast forward.
 (You can use
 [Space Next](https://addons.mozilla.org/en-US/firefox/addon/space-next/)
