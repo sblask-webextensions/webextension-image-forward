@@ -19,10 +19,15 @@ custom functionality as possible:
    display.
  - You can use `about:config` to modify
    `extensions.imageforward.linkURLRegExp` to control which links count as
-   images. To configure minimum width and height of embedded images to be
-   shown, you can modify `extensions.imageforward.minHeight` and
-   `extensions.imageforward.minWidth`.
- - For fullscreen, simply press F11 to enable Firefox' fullscreen display
+   images. To avoid getting 1 pixel images or other irrelevant images, you can
+   configure minimum width and height of embedded images to be shown. You can
+   also restrict by name like with image links(by default all names are
+   matched). The relevant settings are
+   `extensions.imageforward.minHeight`,
+   `extensions.imageforward.minWidth` and
+   `extensions.imageforward.imageURLRegExp`.
+ - For fullscreen, simply press F11 to enable Firefox' native fullscreen
+   functionality
  - There are only 3 custom keyboard shortcuts, `Ctrl Space` for cycling
    through image links, `Ctrl Shift Space` for cycling through embedded
    images and `Ctrl Shift Escape` to go back to the web page images. All three
@@ -35,9 +40,10 @@ custom functionality as possible:
    which you can call for example using
    [FireGestures](https://addons.mozilla.org/en-US/firefox/addon/firegestures/)
  - You can use the Firefox back/forward functionality to go one image back at
-   a time and then again forward until you reached the last image loaded with `Image
-   Forward`'s keyboard shortcuts. No images are skipped if you combine both
-   navigation methods.
+   a time and then again forward until you reached the last image loaded with
+   the above keyboard shortcuts. If there are many images on on a page, you
+   might have to adjust `browser.sessionhistory.max_entries` to make this
+   work as it effectively restricts the times you can go back in history.
 
 Feedback
 --------

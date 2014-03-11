@@ -19,6 +19,7 @@ var setDefaultPreferences = function() {
     branch.setCharPref("linkURLRegExp", "^[^#\\?]+\\.(jpg|jpeg|png)((#|\\?).*)?$");
     branch.setIntPref("minHeight", 200);
     branch.setIntPref("minWidth", 300);
+    branch.setBoolPref("goBackInHistory", false);
 };
 
 function simpleToDomWindow(aWindow) {

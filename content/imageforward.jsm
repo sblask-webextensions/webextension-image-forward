@@ -140,6 +140,7 @@ function ImageForward() {
         // history when iterating to fast. `browser.imageForwardLinks.length`
         // would point to before the initial page then
         browser.imageForwardHistoryIndex = 0;
+        browser.imageForwardOrigin = browser.contentWindow.location.href;
     };
 
     this.resetVariables = function(browser) {
@@ -147,14 +148,22 @@ function ImageForward() {
         browser.imageForwardNextIndex = -1;
         browser.imageForwardHistoryAdjust = 0;
         browser.imageForwardHistoryIndex = 0;
+        browser.imageForwardOrigin = undefined;
     };
 
     this.backToStart = function(browser) {
-        var backToStartAdjustment =
-            -(browser.imageForwardHistoryIndex +
-              browser.imageForwardHistoryAdjust);
+        var goBackInHistory = Services.prefs.getBoolPref(
+            "extensions.imageforward.goBackInHistory"
+        );
+        if (goBackInHistory) {
+            var backToStartAdjustment =
+                -(browser.imageForwardHistoryIndex +
+                  browser.imageForwardHistoryAdjust);
+            browser.contentWindow.history.go(backToStartAdjustment);
+        } else {
+            this.goToUrl(browser, browser.imageForwardOrigin, null);
+        }
         this.resetVariables(browser);
-        browser.contentWindow.history.go(backToStartAdjustment);
     };
 
     this.getDocuments = function(browser) {
@@ -178,15 +187,18 @@ function ImageForward() {
     this.loadNextImage = function(browser) {
         var urlAndReferrer =
             browser.imageForwardLinks[browser.imageForwardNextIndex];
-        var url = urlAndReferrer[0];
+        this.goToUrl(browser, urlAndReferrer[0], urlAndReferrer[1]);
+        browser.imageForwardNextIndex += 1;
+    };
+
+    this.goToUrl = function(browser, url, referrerURL) {
         // can't use loadURI for local urls - that's ok, no need for referrer
         if (url.indexOf("file://") === 0) {
             browser.contentDocument.location.assign(url);
         } else {
-            var referrerURL = urlAndReferrer[1];
-            browser.loadURI(url, this.makeURI(referrerURL), null);
+            var referrerURI = referrerURL ? this.makeURI(referrerURL) : null;
+            browser.loadURI(url, referrerURI, null);
         }
-        browser.imageForwardNextIndex += 1;
     };
 
     this.urlsAndReferrers = function(documents, extractorFunction, filterFunction) {
