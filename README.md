@@ -3,6 +3,9 @@ firefox-image-forward
 
 A firefox extension for easy cycling through images and image links on a page.
 Inspired by parts of Opera 12's fast forward.
+(You can use
+[Space Next](https://addons.mozilla.org/en-US/firefox/addon/space-next/)
+to get the rest of its functionality)
 
 Similar extensions are:
 
@@ -13,6 +16,17 @@ This extension aims at providing the same functionality(apart from an
 automatic slideshow) in a much simpler and reliable way by using as little
 custom functionality as possible:
 
+ - There are only 3 custom keyboard shortcuts, `Ctrl Space` for cycling
+   through image links, `Ctrl Shift Space` for cycling through embedded
+   images and `Ctrl Shift Escape` to go back to the web page images. All three
+   are configurable using the
+   [Customizable Shortcuts extension](https://addons.mozilla.org/en-US/firefox/addon/customizable-shortcuts/).
+   (the corresponding functionality is provided by
+   gImageForward.iterateImages(),
+   gImageForward.iterateImageLinks and
+   gImageForward.abortIteration()
+   which you can call for example using
+   [FireGestures](https://addons.mozilla.org/en-US/firefox/addon/firegestures/))
  - Image links are simply loaded as if they where clicked upon, embedded
    pictures as if you'd have used `View Image` from context menu. Thus,
    you can combine `Image Forward` with other extension to enhance their
@@ -28,17 +42,6 @@ custom functionality as possible:
    `extensions.imageforward.imageURLRegExp`.
  - For fullscreen, simply press F11 to enable Firefox' native fullscreen
    functionality
- - There are only 3 custom keyboard shortcuts, `Ctrl Space` for cycling
-   through image links, `Ctrl Shift Space` for cycling through embedded
-   images and `Ctrl Shift Escape` to go back to the web page images. All three
-   are configurable using the
-   [Customizable Shortcuts extension](https://addons.mozilla.org/en-US/firefox/addon/customizable-shortcuts/)
- - The corresponding functionality is provided by
-   gImageForward.iterateImages(),
-   gImageForward.iterateImageLinks and
-   gImageForward.abortIteration()
-   which you can call for example using
-   [FireGestures](https://addons.mozilla.org/en-US/firefox/addon/firegestures/)
  - You can use the Firefox back/forward functionality to go one image back at
    a time and then again forward until you reached the last image loaded with
    the above keyboard shortcuts. If there are many images on on a page, you
