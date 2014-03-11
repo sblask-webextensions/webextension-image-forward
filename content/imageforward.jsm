@@ -78,6 +78,9 @@ function ImageForward() {
             return;
         }
         this.removeKeyboardShortcuts();
+        for(var index = 0; index < this.gBrowser.browsers.length; index++) {
+            this.resetVariables(this.gBrowser.browsers[index]);
+        }
     };
 
     this.iterateImages = function() {
