@@ -248,8 +248,8 @@ function ImageForward() {
             var image = images[index];
             var imageURL = image.src;
             var isMatch = imageURL.match(regexp);
-            var isHighEnough = image.height >= minHeight;
-            var isWideEnough = image.width >= minWidth;
+            var isHighEnough = image.naturalHeight >= minHeight;
+            var isWideEnough = image.naturalWidth >= minWidth;
             var isKnown = result.indexOf(imageURL) >= 0;
             if (isMatch && !isKnown && isHighEnough && isWideEnough) {
                 result.push(imageURL);
