@@ -29,22 +29,22 @@ custom functionality as possible.
 Usage
 -----
 
- - There are only 3 custom keyboard shortcuts. `Ctrl Space` and `Ctrl Shift
-   Space` try to extract image URLs from the current page and set the tab into
-   iteration mode if there are any, so pressing them again will load the next
-   image. `Ctrl Shift Escape` ends the iteration mode and loads the initial
-   page.
- - For fullscreen, simply press F11 to enable Firefox' native fullscreen
+ - Pressing `Ctrl Space` and `Ctrl Shift Space` will cause `Image Forward` to
+   try to extract image URLs from the current page. If there are any, the tab
+   is set into iteration mode and the first image is loaded. Pressing them
+   again will load the next one. `Ctrl Shift Escape` ends the iteration mode
+   and loads the initial page.
+ - For fullscreen, simply press F11 to enable the browser's native fullscreen
    functionality
- - You can use the Firefox back/forward functionality to go one image back at
+ - You can use the back/forward browser functionality to go one image back at
    a time and then again forward until you reached the last image loaded with
    the above keyboard shortcuts. If there are many images on on a page, you
    might have to adjust `browser.sessionhistory.max_entries` to make this
-   work as it effectively restricts the times you can go back in history. If
-   you go back beyond the first image or load a new page, the iteration mode
-   is ended.
+   work as this setting effectively restricts the times you can go back in
+   history. If you go back beyond the first image or load a new page, the
+   iteration mode is ended.
 
-Configuration
+Customization
 -------------
 
  - You can configure the keyboard shortcuts using the
@@ -57,17 +57,15 @@ Configuration
    `gImageForward.abortIteration()`
  - You can use `about:config` to modify
    `extensions.imageforward.linkURLRegExp` to control which links count as
-   images. To avoid getting 1 pixel images or other irrelevant images, you can
-   configure minimum width and height of embedded images to be shown. You can
-   also restrict by name like with image links(by default all names are
-   matched). The relevant settings are
-   `extensions.imageforward.minHeight`,
-   `extensions.imageforward.minWidth` and
-   `extensions.imageforward.imageURLRegExp`.
+   images. To not include 1 pixel images or other small images when cycling
+   through embedded images, there is a setting for minimum width and height:
+   `extensions.imageforward.minHeight` and `extensions.imageforward.minWidth`
+   (doesn't effet cycling through image links as their size is unknown before
+   loading them).
  - Image links are simply loaded as if they where clicked upon, embedded
    pictures as if you'd have used `View Image` from context menu. Thus,
-   you can combine `Image Forward` with other extension to enhance their
-   display.
+   you can combine `Image Forward` with other extensions like
+   [ImageZoom](https://addons.mozilla.org/en-US/firefox/addon/image-zoom/).
 
 Feedback
 --------
