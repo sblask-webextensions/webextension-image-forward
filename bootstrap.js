@@ -1,8 +1,9 @@
 Components.utils.import("resource://gre/modules/devtools/Console.jsm");
 Components.utils.import("resource://gre/modules/Services.jsm");
 
+var extensionResource = "chrome://imageforward/content/imageforward.jsm";
+
 var initFunction = function(domWindow) {
-    var extensionResource = "chrome://imageforward/content/imageforward.jsm";
     Components.utils.import(extensionResource);
     domWindow.gImageForward = new ImageForward();
     domWindow.gImageForward.initialize(domWindow);
@@ -11,6 +12,7 @@ var initFunction = function(domWindow) {
 var destroyFunction = function(domWindow) {
     domWindow.gImageForward.destroy();
     domWindow.gImageForward = undefined;
+    Components.utils.unload(extensionResource);
 };
 
 var setDefaultPreferences = function() {

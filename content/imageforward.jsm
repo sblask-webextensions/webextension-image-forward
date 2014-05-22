@@ -87,7 +87,10 @@ function ImageForward() {
         }
         this.removeKeyboardShortcuts();
         for(var index = 0; index < this.gBrowser.browsers.length; index++) {
-            this.resetVariables(this.gBrowser.browsers[index]);
+            var browser = this.gBrowser.browsers[index];
+            this.resetVariables(browser);
+            this.ensureNoProgressListener(browser);
+            this.ensureNoHistoryListener(browser);
         }
     };
 
@@ -288,6 +291,13 @@ function ImageForward() {
         );
     };
 
+    this.ensureNoProgressListener = function(browser) {
+        if (browser.imageForwardProgressListener) {
+            browser.removeProgressListener(browser.imageForwardProgressListener);
+            browser.imageForwardProgressListener = undefined;
+        }
+    };
+
     this.ensureHistoryListener = function(browser) {
         if (browser.imageForwardHistoryListener) {
             return;
@@ -296,6 +306,13 @@ function ImageForward() {
         // need to keep a reference, seems to be garbage collected otherwise
         browser.imageForwardHistoryListener = listener;
         browser.sessionHistory.addSHistoryListener(listener);
+    };
+
+    this.ensureNoHistoryListener = function(browser) {
+        if (browser.imageForwardHistoryListener) {
+            browser.sessionHistory.removeSHistoryListener(listener);
+            browser.imageForwardHistoryListener = undefined;
+        }
     };
 
     this.containsURL = function(urlsAndReferrers, url) {

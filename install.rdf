@@ -3,7 +3,7 @@
     <Description about="urn:mozilla:install-manifest">
         <em:id>imageforward@sblask</em:id>
         <em:name>Image Forward</em:name>
-        <em:version>1.0.0</em:version>
+        <em:version>1.0.1</em:version>
         <em:type>2</em:type>
         <em:bootstrap>true</em:bootstrap>
         <em:creator>Sebastian Blask</em:creator>
