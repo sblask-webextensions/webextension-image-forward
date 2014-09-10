@@ -63,7 +63,7 @@ function ImageForward() {
             this.makeKeyboardShortcutElement(
                 "imageforward-abort-iterations",
                 null,
-                "VK_ESCAPE",
+                "B",
                 "accel shift",
                 this.abortIteration.bind(this)
             );
