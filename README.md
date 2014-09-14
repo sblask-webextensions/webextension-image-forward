@@ -32,7 +32,7 @@ Usage
  - Pressing `Ctrl Space` and `Ctrl Shift Space` will cause `Image Forward` to
    try to extract image URLs from the current page. If there are any, the tab
    is set into iteration mode and the first image is loaded. Pressing them
-   again will load the next one. `Ctrl Shift Escape` ends the iteration mode
+   again will load the next one. `Ctrl Shift B` ends the iteration mode
    and loads the initial page.
  - For fullscreen, simply press F11 to enable the browser's native fullscreen
    functionality
