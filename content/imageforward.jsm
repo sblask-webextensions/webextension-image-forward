@@ -147,6 +147,7 @@ function ImageForward() {
 
     this.initializeVariables = function(browser, urlsAndReferrers) {
         browser.imageForwardLinks = urlsAndReferrers;
+        browser.imageForwardVisitedLinks = new Set();
         browser.imageForwardNextIndex = 0;
         // track uses os back/forward function of browser
         browser.imageForwardHistoryAdjust = 0;
@@ -159,6 +160,7 @@ function ImageForward() {
 
     this.resetVariables = function(browser) {
         browser.imageForwardLinks = undefined;
+        browser.imageForwardVisitedLinks = undefined;
         browser.imageForwardNextIndex = -1;
         browser.imageForwardHistoryAdjust = 0;
         browser.imageForwardHistoryIndex = 0;
@@ -399,12 +401,19 @@ function ImageForward() {
                         Components.interfaces.nsIHttpChannel);
                 }
                 // need to reset when a new URL is entered, but not if it's one
-                // of our image URLs(or a redirect from it - hence originalURI)
-                if (!this.containsURL(
-                        browser.imageForwardLinks,
-                        aRequest.originalURI.asciiSpec)
-                    ) {
+                // of our image URLs
+                var originalUrl = aRequest.originalURI.asciiSpec;
+                var maybeRedirectedUrl = aRequest.URI.asciiSpec;
+                var isKnown =
+                    this.containsURL(browser.imageForwardLinks, originalUrl);
+                // need to keep track of visited urls to not reset when going
+                // back and forth between redirected urls
+                var isVisited =
+                    browser.imageForwardVisitedLinks.has(maybeRedirectedUrl);
+                if (!isKnown && !isVisited) {
                     this.resetVariables(browser);
+                } else {
+                    browser.imageForwardVisitedLinks.add(maybeRedirectedUrl);
                 }
             }.bind(this)
         };
