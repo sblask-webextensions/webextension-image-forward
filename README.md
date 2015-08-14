@@ -14,7 +14,7 @@ Introduction
 You can use `Ctrl Shift Space` to iterate through embedded images on for example
 [The Big Picture](http://www.boston.com/bigpicture/)
 and `Ctrl Space` to iterate through the images linked on for example
-[Desktop Wallpaper](http://hddesktopwallpaperblog.blogspot.se/2012/06/nature-wallpaper.html).
+[reddit's wallpaper topic](https://www.reddit.com/r/wallpaper).
 Once you've reached the end, the index page will be loaded again.
 
 Similar extensions are:
