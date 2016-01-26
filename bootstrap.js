@@ -1,4 +1,3 @@
-Components.utils.import("resource://gre/modules/devtools/Console.jsm");
 Components.utils.import("resource://gre/modules/Services.jsm");
 
 var extensionResource = "chrome://imageforward/content/imageforward.jsm";

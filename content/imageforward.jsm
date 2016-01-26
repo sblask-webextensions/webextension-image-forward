@@ -1,4 +1,3 @@
-Components.utils.import("resource://gre/modules/devtools/Console.jsm");
 Components.utils.import("resource://gre/modules/Services.jsm");
 
 EXPORTED_SYMBOLS = ["ImageForward"];
