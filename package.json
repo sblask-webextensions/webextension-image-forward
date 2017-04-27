@@ -1,0 +1,24 @@
+{
+    "author": "Sebastian Blask",
+    "devDependencies": {
+        "eslint": "3.13.x",
+        "jscs": "2.6.x",
+        "web-ext": "1.8.x"
+    },
+    "license": "MIT",
+    "name": "imageforward",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/sblask/firefox-image-forward"
+    },
+    "scripts": {
+        "build": "web-ext build --artifacts-dir .",
+        "help": "web-ext --help",
+        "lint": "eslint background.js && jscs background.js",
+        "start": "GTK_THEME=Greybird web-ext run --verbose --firefox firefox-trunk",
+        "start:stable": "GTK_THEME=Greybird web-ext run --verbose --firefox firefox",
+        "test": "web-ext lint"
+    },
+    "title": "Image Forward",
+    "version": "2.0.0b"
+}

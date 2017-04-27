@@ -1,0 +1,59 @@
+{
+    "applications": {
+        "gecko": {
+            "id": "imageforward@sblask",
+            "strict_min_version": "48.0"
+        }
+    },
+    "author": "Sebastian Blask",
+    "background": {
+        "scripts": [
+            "background.js"
+        ]
+    },
+    "browser_action": {
+        "browser_style": true,
+        "default_icon": {
+            "16": "icons/icon16.png",
+            "24": "icons/icon24.png",
+            "32": "icons/icon32.png"
+        },
+        "default_title": "Image Forward"
+    },
+    "commands": {
+        "abort-cycling": {
+            "description": "Abort cycling through images and go back to page of origin",
+            "suggested_key": {
+                "default": "Ctrl+Shift+B"
+            }
+        },
+        "cycle-through-linked-images": {
+            "description": "Show first/next image linked from page",
+            "suggested_key": {
+                "default": "Ctrl+Shift+L"
+            }
+        },
+        "cycle-through-embedded-images": {
+            "description": "Show first/next image embedded in page",
+            "suggested_key": {
+                "default": "Ctrl+Shift+E"
+            }
+        }
+    },
+    "description": "Easily cycle through images on a page or images linked from a page. Inspired by parts of Opera 12's Fast Forward.",
+    "homepage_url": "https://addons.mozilla.org/firefox/addon/image-forward/",
+    "manifest_version": 2,
+    "name": "Image Forward",
+    "options_ui": {
+        "page": "options/options.html"
+    },
+    "permissions": [
+        "<all_urls>",
+        "activeTab",
+        "storage",
+        "webNavigation",
+        "webRequest",
+        "webRequestBlocking"
+    ],
+    "version": "2.0.0b"
+}

@@ -1,0 +1,7 @@
+{
+    "preset": "airbnb",
+    "validateQuoteMarks": '"',
+    "validateIndentation": 4,
+    "excludeFiles": [
+    ],
+}
