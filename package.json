@@ -3,7 +3,7 @@
     "devDependencies": {
         "eslint": "3.13.x",
         "jscs": "2.6.x",
-        "web-ext": "1.8.x"
+        "web-ext": "1.9.x"
     },
     "license": "MIT",
     "name": "imageforward",
