@@ -8,29 +8,19 @@ A firefox extension to easily go through images embedded on or linked from a web
 Example:
 
 ```
-+---------------------+   +-------------------------------+
-|                     |   |                               |
-|   page_one          |   |   page_two                    |
-|                     |   |                               |
-|  +---------------+  |   |                               |
-|  |               |  |   |   <link to image.jpg>         |
-|  | image_one     |  |   |                               |
-|  |               |  |   |   <link to image.png>         |
-|  +---------------+  |   |                               |
-|                     |   |   <link to image.tiff>        |
-|  +---------------+  |   |                               |
-|  |               |  |   |   <link to page_with_image>   |
-|  |  image_two    |  |   |                               |
-|  |               |  |   |                               |
-|  +---------------+  |   |                               |
-|                     |   |                               |
-|  +---------------+  |   |                               |
-|  |               |  |   |                               |
-|  |  image_three  |  |   |                               |
-|  |               |  |   |                               |
-|  +---------------+  |   |                               |
-|                     |   |                               |
-+---------------------+   +-------------------------------+
++---------------------+   +-----------------------------+
+|   page_one          |   |  page_two                   |
+|                     |   |                             |
+|  +---------------+  |   |  <link to image.jpg>        |
+|  |  image_one    |  |   |  <link to image.png>        |
+|  +---------------+  |   |  <link to image.tiff>       |
+|  +---------------+  |   |  <link to page_with_image>  |
+|  |  image_two    |  |   |                             |
+|  +---------------+  |   |                             |
+|  +---------------+  |   |                             |
+|  |  image_three  |  |   |                             |
+|  +---------------+  |   |                             |
++---------------------+   +-----------------------------+
 ```
 
 If you are on `page_one` and you can see 3 images, you can press
