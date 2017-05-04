@@ -3,11 +3,13 @@ function restoreOptions() {
         "linkedImagesRegexp",
         "minWidth",
         "minHeight",
-    ], result => {
-        document.querySelector("#linkedImagesRegexp").value = result.linkedImagesRegexp || "";
-        document.querySelector("#minWidth").value = result.minWidth || "";
-        document.querySelector("#minHeight").value = result.minHeight || "";
-    });
+    ]).then(
+        result => {
+            document.querySelector("#linkedImagesRegexp").value = result.linkedImagesRegexp || "";
+            document.querySelector("#minWidth").value = result.minWidth || "";
+            document.querySelector("#minHeight").value = result.minHeight || "";
+        }
+    );
 }
 
 function saveOptions(event) {
