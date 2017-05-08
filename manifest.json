@@ -30,13 +30,15 @@
         "cycle-through-linked-images": {
             "description": "Show first/next image linked from page",
             "suggested_key": {
-                "default": "Ctrl+Space"
+                "default": "Ctrl+Space",
+                "mac": "Alt+Space"
             }
         },
         "cycle-through-embedded-images": {
             "description": "Show first/next image embedded in page",
             "suggested_key": {
-                "default": "Ctrl+Shift+Space"
+                "default": "Ctrl+Shift+Space",
+                "mac": "Alt+Shift+Space"
             }
         }
     },
