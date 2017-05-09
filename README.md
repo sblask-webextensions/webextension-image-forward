@@ -41,6 +41,10 @@ want to load. An example where this works is [reddit's wallpaper
 topic](https://www.reddit.com/r/wallpaper) which however contains many links to
 pages instead of images, so you have to check out the options.
 
+Due to conflicts, you can use `Alt-Shift-Space` and `Alt-Space` instead of the
+default shortcuts to load images on Mac and `Ctrl-Shift-X` to go back in
+Windows.
+
 Inspired by parts of Opera 12's Fast Forward.
 
 Feedback

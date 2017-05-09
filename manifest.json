@@ -24,7 +24,8 @@
         "abort-cycling": {
             "description": "Abort cycling through images and go back to page of origin",
             "suggested_key": {
-                "default": "Ctrl+Shift+B"
+                "default": "Ctrl+Shift+B",
+                "windows": "Ctrl+Shift+X"
             }
         },
         "cycle-through-linked-images": {
