@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="./options.css">
+    </head>
+
+    <body>
+        <form>
+            <fieldset>
+                <legend>Options</legend>
+                <div class="wrapper">
+                    <label
+                        for="linkedImagesRegexp"
+                        title="Regular expression to identify image links"
+                        >Linked images regexp</label>
+                    <input type="text" id="linkedImagesRegexp" class="option"></input>
+                </div>
+                <div class="wrapper">
+                    <label
+                        for="minWidth"
+                        title="Only images wider than this will be used"
+                        >Minimum width for embedded images</label>
+                    <input type="number" id="minWidth" class="option"></input>
+                </div>
+                <div class="wrapper">
+                    <label
+                        for="minHeight"
+                        title="Only images higher than this will be used"
+                        >Minimum height for embedded images</label>
+                    <input type="number" id="minHeight" class="option"></input>
+                </div>
+
+                <input type="submit" value="Save">
+            </fieldset>
+        </form>
+        <script src="../browser-polyfill.js"></script>
+        <script src="./options.js"></script>
+    </body>
+
+</html>
