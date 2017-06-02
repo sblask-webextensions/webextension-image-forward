@@ -1,29 +1,35 @@
 [![Build Status](https://travis-ci.org/sblask/firefox-image-forward.svg?branch=master)](https://travis-ci.org/sblask/firefox-image-forward)
 
-firefox-image-forward
-=====================
+Image Forward
+=============
 
-A firefox extension to easily go through images embedded on or linked from a web page.
+A webextension to easily go through images embedded on or linked from a web page.
+
+Note, unlike in Firefox you need to configure keyboard shortcuts in Chrome:
+
+ - Abort cycling through images and go back to page of origin: Ctrl+Shift+B
+ - Show first/next image embedded in page: Ctrl+Shift+Space
+ - Show first/next image linked from page: Ctrl+Space
 
 Example:
 
 ```
-+---------------------+   +-----------------------------+
-|   page_one          |   |  page_two                   |
-|                     |   |                             |
-|  +---------------+  |   |  <link to image.jpg>        |
-|  |  image_one    |  |   |  <link to image.png>        |
-|  +---------------+  |   |  <link to image.tiff>       |
-|  +---------------+  |   |  <link to page_with_image>  |
-|  |  image_two    |  |   |                             |
-|  +---------------+  |   |                             |
-|  +---------------+  |   |                             |
-|  |  image_three  |  |   |                             |
-|  +---------------+  |   |                             |
-+---------------------+   +-----------------------------+
++---------------------+
+|  page_one           |
+|                     |
+|  +---------------+  |
+|  |  image_one    |  |
+|  +---------------+  |
+|  +---------------+  |
+|  |  image_two    |  |
+|  +---------------+  |
+|  +---------------+  |
+|  |  image_three  |  |
+|  +---------------+  |
++---------------------+
 ```
 
-If you are on `page_one` and you can see 3 images, you can press
+If you are on `page_one`  that contains 3 images, you can press
 `Ctrl-Shift-Space` to load `image_one` as if you had right clicked it and
 chosen `View Image`. Press again and `image_two` is loaded (without having to
 go back to `page_one` and click on it), again and `image_three` is loaded. One
@@ -33,13 +39,30 @@ loaded if they are bigger than what's configured in the add-on's options,
 otherwise they are skipped. A real example where you can do this is [The Big
 Picture](http://www.boston.com/bigpicture/).
 
-Similarly, if you are on `page_two` you can press `Ctrl-Space` to load first
-`image.jpg`, then `image.png` and then go back to `page_two`. The images that
-are loadable are determined by a regular expression that you can configure in
-the options. Add `tiff` to also load any tiff image or match any page that you
-want to load. An example where this works is [reddit's wallpaper
-topic](https://www.reddit.com/r/wallpaper) which however contains many links to
-pages instead of images, so you have to check out the options.
+```
++-----------------------------+
+|  page_two                   |
+|                             |
+|  <link to image.jpg>        |
+|  <link to image.png>        |
+|  <link to image.tiff>       |
+|  <link to page_with_image>  |
+|                             |
+|                             |
+|                             |
+|                             |
+|                             |
++-----------------------------+
+```
+
+Similarly, if you are on `page_two` that links to a bunch of images, you can
+press `Ctrl-Space` to load first `image.jpg`, then `image.png` and then go back
+to `page_two`. The images that are loadable are determined by a regular
+expression that you can configure in the options. Add `tiff` to also load any
+tiff image or match any page that you want to load. An example where this works
+is [reddit's wallpaper topic](https://www.reddit.com/r/wallpaper) which however
+contains many links to pages instead of images, so you have to check out the
+options.
 
 Due to conflicts, you can use `Alt-Shift-Space` and `Alt-Space` instead of the
 default shortcuts to load images on Mac and `Ctrl-Shift-X` to go back in
