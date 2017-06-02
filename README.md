@@ -5,13 +5,18 @@ Image Forward
 
 A webextension to easily go through images embedded on or linked from a web page.
 
-Note, unlike in Firefox you need to configure keyboard shortcuts in Chrome:
+Note for Chrome
+---------------
+
+Keyboard shortcuts are not automatically set up. You need to do that manually
+on the extension page in settings. These are the default ones:
 
  - Abort cycling through images and go back to page of origin: Ctrl+Shift+B
  - Show first/next image embedded in page: Ctrl+Shift+Space
  - Show first/next image linked from page: Ctrl+Space
 
-Example:
+Example
+-------
 
 ```
 +---------------------+
