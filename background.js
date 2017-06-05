@@ -19,10 +19,6 @@ browser.storage.local.get(null)
         }
     });
 
-browser.browserAction.onClicked.addListener(function() {
-    browser.runtime.openOptionsPage();
-});
-
 browser.commands.onCommand.addListener(function(command) {
     if (command == "cycle-through-linked-images") {
         browser.storage.local.get(["linkedImagesRegexp"])
