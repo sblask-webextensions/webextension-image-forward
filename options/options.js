@@ -12,6 +12,12 @@ function restoreOptions() {
     );
 }
 
+function enableAutosave() {
+    for (let input of document.querySelectorAll("input, textarea")) {
+        input.addEventListener("input", saveOptions);
+    }
+}
+
 function saveOptions(event) {
     event.preventDefault();
     browser.storage.local.set({
@@ -22,6 +28,7 @@ function saveOptions(event) {
 }
 
 document.addEventListener("DOMContentLoaded", restoreOptions);
+document.addEventListener("DOMContentLoaded", enableAutosave);
 document.querySelector("form").addEventListener("submit", saveOptions);
 
 browser.storage.onChanged.addListener(restoreOptions);
