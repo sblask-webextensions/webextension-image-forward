@@ -9,6 +9,9 @@ const OPTION_DEFAULTS = {
 let currentTab = undefined;
 browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => { currentTab = tabs[0].id; });
 browser.tabs.onActivated.addListener((activeInfo) => { currentTab = activeInfo.tabId; });
+browser.windows.onFocusChanged.addListener((windowId) => {
+    browser.tabs.query({ active: true, windowId: windowId }).then((tabs) => { currentTab = tabs[0].id; });
+});
 
 let state = {};
 
