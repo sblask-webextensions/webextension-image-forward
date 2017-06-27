@@ -42,7 +42,7 @@
         }
     },
     "description": "Easily cycle through images on a page or images linked from a page. Inspired by parts of Opera 12's Fast Forward.",
-    "homepage_url": "https://addons.mozilla.org/firefox/addon/image-forward/",
+    "homepage_url": "https://github.com/sblask/webextension-image-forward",
     "icons": {
         "128": "icon-128x128.png",
         "16": "icon-16x16.png",

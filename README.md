@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/sblask/firefox-image-forward.svg?branch=master)](https://travis-ci.org/sblask/firefox-image-forward)
+[![Build Status](https://travis-ci.org/sblask/webextension-image-forward.svg?branch=master)](https://travis-ci.org/sblask/webextension-image-forward)
 
 Image Forward
 =============
@@ -79,6 +79,6 @@ Feedback
 --------
 
 You can report bugs or make feature requests on
-[Github](https://github.com/sblask/firefox-image-forward).
+[Github](https://github.com/sblask/webextension-image-forward).
 
 Patches are welcome.
