@@ -5,9 +5,9 @@ function restoreOptions() {
         "minHeight",
     ]).then(
         result => {
-            document.querySelector("#linkedImagesRegexp").value = result.linkedImagesRegexp || "";
-            document.querySelector("#minWidth").value = result.minWidth || "";
-            document.querySelector("#minHeight").value = result.minHeight || "";
+            setTextValue("linkedImagesRegexp", result.linkedImagesRegexp || "");
+            setTextValue("minWidth", result.minWidth || "");
+            setTextValue("minHeight", result.minHeight || "");
         }
     );
 }
@@ -18,6 +18,14 @@ function enableAutosave() {
     }
     for (let input of document.querySelectorAll("input[type=radio], input[type=checkbox]")) {
         input.addEventListener("change", saveOptions);
+    }
+}
+
+function setTextValue(elementID, newValue) {
+    let oldValue = document.getElementById(elementID).value;
+
+    if (oldValue !== newValue) {
+        document.getElementById(elementID).value = newValue;
     }
 }
 
