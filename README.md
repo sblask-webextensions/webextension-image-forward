@@ -75,6 +75,11 @@ Windows.
 
 Inspired by parts of Opera 12's Fast Forward.
 
+Privacy Policy
+--------------
+
+This extension does not collect or send data of any kind to third parties.
+
 Feedback
 --------
 
