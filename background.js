@@ -13,7 +13,7 @@ browser.windows.onFocusChanged.addListener((windowId) => {
     browser.tabs.query({ active: true, windowId: windowId }).then((tabs) => { currentTab = tabs[0].id; });
 });
 
-let state = {};
+const state = {};
 
 browser.storage.local.get(null)
     .then((result) => {
@@ -43,19 +43,19 @@ browser.commands.onCommand.addListener(function(command) {
 });
 
 function extractLinks(argumentObject) {
-    let regexp = new RegExp(argumentObject.regexp, "i");
+    const regexp = new RegExp(argumentObject.regexp, "i");
 
-    let  matchingURLs = [];
-    for (let link of document.links) {
-        let isMatch = link.href.match(regexp);
-        let isKnown =  matchingURLs.indexOf(link.href) >= 0;
+    const  matchingURLs = [];
+    for (const link of document.links) {
+        const isMatch = link.href.match(regexp);
+        const isKnown =  matchingURLs.indexOf(link.href) >= 0;
         if (isMatch && !isKnown) {
             matchingURLs.push(link.href);
         }
     }
 
-    let referers = [];
-    for (let _url of matchingURLs) {
+    const referers = [];
+    for (const _url of matchingURLs) {
         referers.push([document.URL]);
     }
 
@@ -63,19 +63,19 @@ function extractLinks(argumentObject) {
 }
 
 function extractImages(argumentObject) {
-    let  matchingURLs = [];
-    for (let image of document.images) {
-        let imageURL = image.src;
-        let isHighEnough = image.naturalHeight >= argumentObject.minHeight;
-        let isWideEnough = image.naturalWidth >= argumentObject.minWidth;
-        let isKnown = matchingURLs.indexOf(imageURL) >= 0;
+    const  matchingURLs = [];
+    for (const image of document.images) {
+        const imageURL = image.src;
+        const isHighEnough = image.naturalHeight >= argumentObject.minHeight;
+        const isWideEnough = image.naturalWidth >= argumentObject.minWidth;
+        const isKnown = matchingURLs.indexOf(imageURL) >= 0;
         if (!isKnown && isHighEnough && isWideEnough) {
             matchingURLs.push(imageURL);
         }
     }
 
-    let referers = [];
-    for (let _url of matchingURLs) {
+    const referers = [];
+    for (const _url of matchingURLs) {
         referers.push([document.URL]);
     }
 
@@ -84,7 +84,7 @@ function extractImages(argumentObject) {
 
 function prepareAndGoForward(extractorFunction, extractorFunctionArguments) {
     if (!state[currentTab]) {
-        let getURLsAndReferers = browser.tabs.executeScript(
+        const getURLsAndReferers = browser.tabs.executeScript(
             currentTab,
             {
                 allFrames: true,
@@ -94,16 +94,16 @@ function prepareAndGoForward(extractorFunction, extractorFunctionArguments) {
                 `,
             }
         );
-        let getOrigin = browser.tabs.executeScript(currentTab, { code: "document.URL" });
+        const getOrigin = browser.tabs.executeScript(currentTab, { code: "document.URL" });
 
         Promise.all([getURLsAndReferers, getOrigin])
             .then((result) => {
-                let urlsAndReferersResults = result[0];
-                let originResult = result[1];
-                let origin = originResult[0];
-                let urlsAndReferers = mergeFrameResults(urlsAndReferersResults);
-                let urls = urlsAndReferers[0];
-                let referers = urlsAndReferers[1];
+                const urlsAndReferersResults = result[0];
+                const originResult = result[1];
+                const origin = originResult[0];
+                const urlsAndReferers = mergeFrameResults(urlsAndReferersResults);
+                const urls = urlsAndReferers[0];
+                const referers = urlsAndReferers[1];
                 state[currentTab] = getInitialTabData(urls, referers, origin);
                 goForward();
             });
@@ -115,7 +115,7 @@ function prepareAndGoForward(extractorFunction, extractorFunctionArguments) {
 function mergeFrameResults(results) {
     let urls = [];
     let referers = [];
-    for (let array of results) {
+    for (const array of results) {
         urls = [...urls, ...array[0]];
         referers = [...urls, ...array[1]];
     }
@@ -128,7 +128,7 @@ function getInitialTabData(urls, referers, origin) {
         return null;
     }
 
-    let data = {
+    const data = {
         index: -1,
         origin: origin,
         referers: referers,
@@ -138,28 +138,28 @@ function getInitialTabData(urls, referers, origin) {
 }
 
 function goForward() {
-    let tabData = state[currentTab];
+    const tabData = state[currentTab];
 
     if (!tabData) {
         return;
     }
 
-    let urls = tabData.urls;
-    let referers = tabData.referers;
+    const urls = tabData.urls;
+    const referers = tabData.referers;
 
-    let newIndex = tabData.index + 1;
+    const newIndex = tabData.index + 1;
     if (newIndex >= urls.length) {
         goToOrigin();
         return;
     }
 
-    let url = urls[newIndex];
-    let referer = referers[newIndex];
+    const url = urls[newIndex];
+    const referer = referers[newIndex];
 
     function addReferer(details) {
         browser.webRequest.onBeforeSendHeaders.removeListener(addReferer);
 
-        let requestHeaders = details.requestHeaders;
+        const requestHeaders = details.requestHeaders;
         requestHeaders.push({name: "Referer", value: referer});
 
         return {requestHeaders: requestHeaders};
@@ -176,7 +176,7 @@ function goForward() {
 
 browser.webNavigation.onCommitted.addListener(
     (details) => {
-        let tabData = state[currentTab];
+        const tabData = state[currentTab];
 
         if (!tabData) {
             return;
@@ -186,7 +186,7 @@ browser.webNavigation.onCommitted.addListener(
             return;
         }
 
-        let index = tabData.urls.indexOf(details.url);
+        const index = tabData.urls.indexOf(details.url);
         if (index != -1) {
             tabData.index = index;
         } else {
@@ -196,7 +196,7 @@ browser.webNavigation.onCommitted.addListener(
 );
 
 function goToOrigin() {
-    let tabData = state[currentTab];
+    const tabData = state[currentTab];
 
     if (!tabData) {
         return;
