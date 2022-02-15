@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/sblask/webextension-image-forward.svg?branch=master)](https://travis-ci.org/sblask/webextension-image-forward)
+[![Build Status](https://github.com/sblask/webextension-image-forward/actions/workflows/build.yml/badge.svg)](https://github.com/sblask/webextension-image-forward/actions/workflows/build.yml)
 
 Image Forward
 =============
