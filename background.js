@@ -7,10 +7,10 @@ const OPTION_DEFAULTS = {
 };
 
 let currentTab = undefined;
-browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => { currentTab = tabs[0].id; });
+browser.tabs.query({active: true, currentWindow: true}).then((tabs) => { currentTab = tabs[0].id; });
 browser.tabs.onActivated.addListener((activeInfo) => { currentTab = activeInfo.tabId; });
 browser.windows.onFocusChanged.addListener((windowId) => {
-    browser.tabs.query({ active: true, windowId: windowId }).then((tabs) => { currentTab = tabs[0].id; });
+    browser.tabs.query({active: true, windowId: windowId}).then((tabs) => { currentTab = tabs[0].id; });
 });
 
 const state = {};
@@ -26,14 +26,14 @@ browser.commands.onCommand.addListener(function(command) {
     if (command == "cycle-through-linked-images") {
         browser.storage.local.get(["linkedImagesRegexp"])
             .then((result) => {
-                prepareAndGoForward(extractLinks, { regexp: result.linkedImagesRegexp });
+                prepareAndGoForward(extractLinks, {regexp: result.linkedImagesRegexp});
             });
     }
 
     if (command == "cycle-through-embedded-images") {
         browser.storage.local.get(["minWidth", "minHeight"])
             .then((result) => {
-                prepareAndGoForward(extractImages, { minWidth: result.minWidth, minHeight: result.minHeight });
+                prepareAndGoForward(extractImages, {minWidth: result.minWidth, minHeight: result.minHeight});
             });
     }
 
@@ -94,7 +94,7 @@ function prepareAndGoForward(extractorFunction, extractorFunctionArguments) {
                 `,
             }
         );
-        const getOrigin = browser.tabs.executeScript(currentTab, { code: "document.URL" });
+        const getOrigin = browser.tabs.executeScript(currentTab, {code: "document.URL"});
 
         Promise.all([getURLsAndReferers, getOrigin])
             .then((result) => {
@@ -171,7 +171,7 @@ function goForward() {
 
     browser.webRequest.onBeforeSendHeaders.addListener(addReferer, {urls: [url]}, ["blocking", "requestHeaders"]);
     browser.webRequest.onBeforeRedirect.addListener(handleRedirects, {urls: [url]});
-    browser.tabs.update(currentTab, { url: url });
+    browser.tabs.update(currentTab, {url: url});
 }
 
 browser.webNavigation.onCommitted.addListener(
@@ -202,5 +202,5 @@ function goToOrigin() {
         return;
     }
 
-    browser.tabs.update(currentTab, { url: tabData.origin });
+    browser.tabs.update(currentTab, {url: tabData.origin});
 }
