@@ -1,4 +1,4 @@
-[![Build Status](https://github.com/sblask/webextension-image-forward/actions/workflows/build.yml/badge.svg)](https://github.com/sblask/webextension-image-forward/actions/workflows/build.yml)
+[![pre-commit Status](https://github.com/sblask/webextension-image-forward/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/sblask/webextension-image-forward/actions/workflows/pre-commit.yml)
 
 Image Forward
 =============
