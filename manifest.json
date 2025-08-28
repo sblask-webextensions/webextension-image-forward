@@ -1,10 +1,4 @@
 {
-    "applications": {
-        "gecko": {
-            "id": "imageforward@sblask",
-            "strict_min_version": "57.0"
-        }
-    },
     "author": "Sebastian Blask",
     "background": {
         "scripts": [
@@ -17,6 +11,11 @@
         "default_icon": "icon.svg",
         "default_popup": "options/options.html",
         "default_title": "Image Forward"
+    },
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "imageforward@sblask"
+        }
     },
     "commands": {
         "abort-cycling": {
@@ -44,11 +43,11 @@
     "description": "Easily cycle through images on a page or images linked from a page. Inspired by parts of Opera 12's Fast Forward.",
     "homepage_url": "https://github.com/sblask/webextension-image-forward",
     "icons": {
-        "128": "icon-128x128.png",
         "16": "icon-16x16.png",
         "32": "icon-32x32.png",
         "48": "icon-48x48.png",
-        "64": "icon-64x64.png"
+        "64": "icon-64x64.png",
+        "128": "icon-128x128.png"
     },
     "manifest_version": 2,
     "name": "Image Forward",
@@ -63,5 +62,5 @@
         "webRequest",
         "webRequestBlocking"
     ],
-    "version": "2.0.6"
+    "version": "x.x.x"
 }
