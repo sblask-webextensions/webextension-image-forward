@@ -45,10 +45,10 @@ browser.commands.onCommand.addListener(function(command) {
 function extractLinks(argumentObject) {
     const regexp = new RegExp(argumentObject.regexp, "i");
 
-    const  matchingURLs = [];
+    const matchingURLs = [];
     for (const link of document.links) {
         const isMatch = link.href.match(regexp);
-        const isKnown =  matchingURLs.indexOf(link.href) >= 0;
+        const isKnown = matchingURLs.indexOf(link.href) >= 0;
         if (isMatch && !isKnown) {
             matchingURLs.push(link.href);
         }
@@ -63,7 +63,7 @@ function extractLinks(argumentObject) {
 }
 
 function extractImages(argumentObject) {
-    const  matchingURLs = [];
+    const matchingURLs = [];
     for (const image of document.images) {
         const imageURL = image.src;
         const isHighEnough = image.naturalHeight >= argumentObject.minHeight;
@@ -89,8 +89,8 @@ function prepareAndGoForward(extractorFunction, extractorFunctionArguments) {
             {
                 allFrames: true,
                 code: `
-                    ${ extractorFunction.toString() };
-                    ${ extractorFunction.name }(${ JSON.stringify(extractorFunctionArguments) })
+                    ${extractorFunction.toString()};
+                    ${extractorFunction.name}(${JSON.stringify(extractorFunctionArguments)})
                 `,
             }
         );

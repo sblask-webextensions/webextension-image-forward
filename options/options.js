@@ -4,7 +4,7 @@ function restoreOptions() {
         "minWidth",
         "minHeight",
     ]).then(
-        result => {
+        (result) => {
             setTextValue("linkedImagesRegexp", result.linkedImagesRegexp || "");
             setTextValue("minWidth", result.minWidth || "");
             setTextValue("minHeight", result.minHeight || "");
