@@ -1,15 +1,11 @@
-function restoreOptions() {
-    browser.storage.local.get([
-        "linkedImagesRegexp",
-        "minWidth",
-        "minHeight",
-    ]).then(
-        (result) => {
-            setTextValue("linkedImagesRegexp", result.linkedImagesRegexp || "");
-            setTextValue("minWidth", result.minWidth || "");
-            setTextValue("minHeight", result.minHeight || "");
-        }
-    );
+import {OPTION_DEFAULTS} from "../option-defaults.js";
+
+async function restoreOptions() {
+    const result = await browser.storage.local.get(OPTION_DEFAULTS);
+    setTextValue("linkedImagesRegexp", result.linkedImagesRegexp || "");
+    maybeHighlightError(result.linkedImagesRegexp || "");
+    setTextValue("minWidth", result.minWidth || "");
+    setTextValue("minHeight", result.minHeight || "");
 }
 
 function enableAutosave() {
@@ -29,10 +25,29 @@ function setTextValue(elementID, newValue) {
     }
 }
 
-function saveOptions(event) {
+function getRegexpError(regexp) {
+    try {
+        new RegExp(regexp);
+    } catch (error) {
+        return error.message;
+    }
+    return undefined;
+}
+
+function maybeHighlightError(regexp) {
+    const regexpElement = document.querySelector("#linkedImagesRegexp");
+    const errorElement = document.querySelector("#linkedImagesRegexpError");
+    const error = getRegexpError(regexp);
+    regexpElement.classList.toggle("error", error !== undefined);
+    errorElement.innerText = error || "";
+}
+
+async function saveOptions(event) {
     event.preventDefault();
-    browser.storage.local.set({
-        linkedImagesRegexp: document.querySelector("#linkedImagesRegexp").value,
+    const linkedImagesRegexp = document.querySelector("#linkedImagesRegexp").value;
+    maybeHighlightError(linkedImagesRegexp);
+    await browser.storage.local.set({
+        linkedImagesRegexp: linkedImagesRegexp,
         minWidth: document.querySelector("#minWidth").value,
         minHeight: document.querySelector("#minHeight").value,
     });

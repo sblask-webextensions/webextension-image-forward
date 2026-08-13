@@ -40,6 +40,15 @@ textarea.error {
 textarea:focus.error {
     outline-color: red;
 }
+input.error {
+    border: 1px solid red;
+}
+input:focus.error {
+    outline-color: red;
+}
+.option-error {
+    color: red;
+}
 .list-error {
     color: red;
 }

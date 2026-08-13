@@ -4,17 +4,26 @@
         "scripts": [
             "background.js"
         ],
+        "service_worker": "background.js",
         "type": "module"
     },
-    "browser_action": {
-        "browser_style": false,
+    "action": {
         "default_icon": "icon.svg",
         "default_popup": "options/options.html",
         "default_title": "Image Forward"
     },
     "browser_specific_settings": {
         "gecko": {
-            "id": "imageforward@sblask"
+            "data_collection_permissions": {
+                "required": [
+                    "none"
+                ]
+            },
+            "id": "imageforward@sblask",
+            "strict_min_version": "140.0"
+        },
+        "gecko_android": {
+            "strict_min_version": "142.0"
         }
     },
     "commands": {
@@ -22,6 +31,7 @@
             "description": "Abort cycling through images and go back to page of origin",
             "suggested_key": {
                 "default": "Ctrl+Shift+B",
+                "mac": "Alt+Shift+B",
                 "windows": "Ctrl+Shift+X"
             }
         },
@@ -49,19 +59,21 @@
         "64": "icon-64x64.png",
         "128": "icon-128x128.png"
     },
-    "manifest_version": 2,
+    "manifest_version": 3,
     "minimum_chrome_version": "148",
     "name": "Image Forward",
     "options_ui": {
         "page": "options/options.html"
     },
     "permissions": [
-        "<all_urls>",
-        "activeTab",
+        "declarativeNetRequest",
+        "scripting",
         "storage",
         "webNavigation",
-        "webRequest",
-        "webRequestBlocking"
+        "webRequest"
+    ],
+    "host_permissions": [
+        "<all_urls>"
     ],
     "version": "x.x.x"
 }
