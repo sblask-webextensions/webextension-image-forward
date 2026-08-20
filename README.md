@@ -1,4 +1,6 @@
 [![pre-commit Status](https://github.com/sblask/webextension-image-forward/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/sblask/webextension-image-forward/actions/workflows/pre-commit.yml)
+[![Chrome Web Store Version](https://img.shields.io/chrome-web-store/v/cbobjpdibmfkpndblfdclhldkachjcme?color=db4437)](https://chromewebstore.google.com/detail/image-forward/cbobjpdibmfkpndblfdclhldkachjcme)
+[![Mozilla Add-on Version](https://img.shields.io/amo/v/image-forward?color=ff7139)](https://addons.mozilla.org/firefox/addon/image-forward/)
 
 Image Forward
 =============
